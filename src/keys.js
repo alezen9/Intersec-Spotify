@@ -1,4 +1,4 @@
 module.exports = {
-    frontend_url: 'http://localhost:3000/',
-    backend_url: 'http://localhost:5000/'
-  }
+  frontend_url: process.env.REACT_APP_FRONTEND_URI,
+  backend_url: process.env.REACT_APP_BACKEND_URI
+}
