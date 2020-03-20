@@ -52,12 +52,12 @@ class Navbar extends Component {
                 Wolf
                 </Button>
             </li>
-            <li>
+            {/* <li>
               <Button component={Link} to="/panther_discover" fullWidth>
                 <span className="icon panther"></span>
                 Panther
                 </Button>
-            </li>
+            </li> */}
             <li>
               <Button component={Link} to="/profile" fullWidth>
                 <AccountCircle />
