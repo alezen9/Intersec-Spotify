@@ -1,0 +1,231 @@
+:root {
+	--background: rgba(17, 17, 17, 0.9);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+
+/* navigation styles start here */
+
+header {
+	background: var(--background);
+	backdrop-filter: blur(40px);
+	text-align: center;
+	position: fixed;
+	z-index: 999;
+	width: 100%;
+	padding: 1em 0;
+}
+
+.nav-toggle {
+	position: absolute !important;
+	top: -9999px !important;
+	left: -9999px !important;
+}
+
+.nav-toggle:focus~.nav-toggle-label {
+	outline: 0;
+}
+
+.nav-toggle-label {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin-right: 15px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.nav-toggle-label span,
+.nav-toggle-label span::before,
+.nav-toggle-label span::after {
+	display: block;
+	background: white;
+	height: 2px;
+	width: 1.5em;
+	border-radius: 2px;
+	position: relative;
+}
+
+.nav-toggle-label span::before,
+.nav-toggle-label span::after {
+	content: '';
+	position: absolute;
+}
+
+.nav-toggle-label span::before {
+	bottom: 7px;
+}
+
+.nav-toggle-label span::after {
+	top: 7px;
+}
+
+.logo {
+	width: 2em;
+	height: 2em;
+	margin-left: 15px;
+	background: url('/media/icons/intersec-logo.svg') no-repeat;
+	background-size: contain;
+	cursor: pointer;
+}
+
+.title {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	width: 6em;
+	height: 2em;
+	background: url('/media/icons/intersec-text.svg') no-repeat;
+	background-size: contain;
+	background-position: center;
+	margin: auto;
+	cursor: pointer;
+}
+
+nav {
+	position: absolute;
+	text-align: center;
+	top: 100%;
+	left: 0;
+	background: var(--background);
+	backdrop-filter: blur(40px);
+	width: 100%;
+	transform: scale(1, 0);
+	transform-origin: top;
+	transition: transform 400ms ease-in-out;
+}
+
+nav ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+nav a {
+	color: white !important;
+	text-decoration: none;
+	text-transform: uppercase;
+	opacity: 0;
+	text-transform: none !important;
+	transition: opacity 150ms ease-in-out;
+}
+
+nav a span {
+	font-size: 1.2em;
+	line-height: 1.2em;
+	font-weight: 300;
+	height: 3em;
+}
+
+nav .exit {
+	color: white !important;
+	box-shadow: inset 0 0 40px 20px rgba(255, 0, 0, 0.6);
+	height: 40px;
+	min-width: 60% !important;
+	border-radius: 3px !important;
+	margin: .5em auto;
+	padding: 5px !important;
+	font-size: 1.2em;
+}
+nav .exit svg {
+	font-size: 1em;
+	line-height: 1em;
+}
+
+nav .exit:hover {
+	background-color: crimson;
+}
+
+nav a span svg {
+	margin: 0 .3em;
+	font-size: 1.2em;
+	line-height: 1.2em;
+}
+
+nav a span.icon {
+	margin: 0 .5em;
+	width: 1.3em;
+	height: 1.3em;
+}
+
+nav a span.icon.wolf {
+	background: url('/media/icons/wolf.svg') no-repeat;
+	background-size: contain;
+	background-position: center;
+}
+
+nav a span.icon.panther {
+	background: url('/media/icons/panther.svg') no-repeat;
+	background-size: contain;
+	background-position: center;
+}
+
+.nav-toggle:checked~nav {
+	transform: scale(1, 1);
+}
+
+.nav-toggle:checked~nav a {
+	opacity: 1;
+	transition: opacity 250ms ease-in-out 250ms;
+}
+
+@media screen and (min-width: 1000px) {
+	.nav-toggle-label {
+		display: none;
+	}
+	header {
+		background: var(--background);
+		backdrop-filter: blur(40px);
+		position: fixed;
+		display: grid;
+		grid-template-columns: .5fr 1fr 1fr minmax(600px, 10fr) .5fr;
+		padding: 0 0;
+		height: 4.2em;
+		justify-content: center;
+	}
+	.logo {
+		grid-column: 2;
+		margin: auto;
+		width: 9em;
+		background: url('/media/icons/intersec-logo-full.svg') no-repeat;
+	}
+	.title {
+		all: unset;
+		display: none;
+	}
+	nav {
+		all: unset;
+		grid-column: 4 / 5;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
+	nav ul {
+		display: flex;
+	}
+	nav a {
+		opacity: 1;
+		position: relative;
+		min-height: 4.5em;
+		border-radius: 0 !important;
+		padding: 0 2em !important;
+	}
+	nav a span {
+		height: 1.5em;
+	}
+	nav a span.icon {
+		margin: 0 .5em;
+		height: 1.1em;
+		width: 1.1em;
+	}
+	nav .exit {
+		min-width: 40px !important;
+	}
+}

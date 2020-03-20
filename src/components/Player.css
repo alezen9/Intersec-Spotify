@@ -1,0 +1,251 @@
+.player{
+    position: fixed;
+    left: 50%;
+    top: 98.5%;
+    transform: translate(-50%, -98.5%);
+    width: 95%;
+    height: 100px;
+    background: #191414;
+    border-radius: 10px;
+    box-shadow: 0 1px 10px .5px rgba(255, 255, 255, 0.1);
+    /*display: inline-block;*/
+}
+
+.player .pContent {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.player .pContent .artwork{
+    position: relative;
+    min-width: 70px;
+    height: 70px;
+}
+
+.player .pContent .info{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-between;
+    text-align: left;
+    height: 100px;
+    width: 250px;
+    overflow: hidden;
+    color: white;
+    margin: auto 1em;
+    padding: 15px 0;
+}
+
+.player .pContent .info .title{
+    display: flex;
+    align-self: flex-start;
+    height: 35px;
+    width: 100%;
+    font-size: .7rem;
+    font-weight: 400;
+}
+
+.player .pContent .info .artist{
+    display: flex;
+    align-items: flex-end;
+    height: 35px;
+    width: 100%;
+    font-size: .75em;
+    font-weight: 100;
+}
+.player .pContent .progressBar{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100%;
+    overflow: auto;
+}
+
+.player .pContent .progressBar .past,
+.player .pContent .progressBar .end{
+    color: white;
+    font-size: .6em;
+    font-weight: 200;
+    padding: 0 .5em
+}
+
+.player .pContent .progressBar .bar{
+    position: relative;
+    width: 85%;
+    height: 2px;
+    background: rgb(46, 46, 46);
+    margin: 0 1em;
+}
+
+.player .pContent .progressBar .bar .tracker{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 2px;
+    background: rgb(177, 177, 177);
+}
+
+.player .pContent .controls{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    width: 200px;
+}
+
+.player .pContent .controls .controlButton {
+	color: white !important;
+	height: 60px;
+    min-width: 60px !important;
+    border-radius: 50%;
+	margin: .5em auto;
+	padding: 0 !important;
+}
+
+.player .pContent .controls .controlButton svg {
+	font-size: 1.5em;
+	line-height: 1.5em;
+}
+
+.player .pContent .controls .play svg {
+	font-size: 3em;
+	line-height: 3em;
+}
+
+.player .pContent .close {
+    position: absolute;
+    top: 5px;
+    right: 45px;
+    color: white !important;
+	height: 30px;
+    min-width: 30px !important;
+    border-radius: 50%;
+    padding: 0 !important;
+    transform: rotateZ(90deg);
+}
+.player .pContent .minimize {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    color: white !important;
+	height: 30px;
+    min-width: 30px !important;
+    border-radius: 50%;
+    padding: 0 !important;
+    transform: rotateZ(90deg);
+}
+.player .pContent .minimize svg,
+.player .pContent .close svg{
+	font-size: 1em;
+	line-height: 1em;
+}
+
+.miniPlayer {
+    position: fixed;
+    left: 50%;
+    top: 98.5%;
+    transform: translate(-50%, -98.5%);
+    width: 100%;
+    height: 64px;
+    border-radius: 2px;
+    padding-right: 1.5vh;
+    /*display: none;*/
+    justify-content: flex-end;
+}
+
+.miniPlayer .minimizedArtwork {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    border-radius: 2px;
+    box-shadow: 1px 1px 10px .5px rgba(0, 0, 0, .5), inset 0 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.miniPlayer .maximize {
+    position: relative;
+    color: white !important;
+	height: 64px;
+    min-width: 64px !important;
+    border-radius: 2px !important;
+    padding: 0 !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+.miniPlayer .maximize svg {
+	font-size: 1em;
+	line-height: 1em;
+}
+
+@media all and (max-width: 1000px){
+    .player{
+        height: 150px;
+    }
+    .player .pContent{
+        flex-wrap: wrap;
+    }
+    .player .pContent .info .artist{
+        all: unset;
+        width: 100%;
+        font-size: .8em;
+        font-weight: 200;
+        text-align: left;
+        align-self: flex-end;
+    }
+    .player .pContent .info .title{
+        all: unset;
+        width: 100%;
+        font-size: .8em;
+        text-align: left;
+    }
+    .player .pContent .controls{
+        width: 40%;
+    }
+    .player .pContent .progressBar{
+        height: 50px;
+    }
+}
+
+@media all and (max-width: 650px){
+    .player{
+        max-height: 150px;
+    }
+    .player .pContent{
+        flex-wrap: wrap;
+    }
+    .player .pContent .artwork{
+        display: none;
+    }
+    .player .pContent .info {
+        width: 80%;
+        height: 60px;
+    }
+    .player .pContent .info .artist{
+        all: unset;
+        width: 100%;
+        font-size: .5em;
+        font-weight: 200;
+        text-align: left;
+        align-self: flex-end;
+    }
+    .player .pContent .info .title{
+        all: unset;
+        width: 100%;
+        font-size: .6em;
+        text-align: left;
+    }
+    .player .pContent .controls{
+        width: 100%;
+        height: 50px;
+    }
+    .player .pContent .progressBar{
+        height: 50px;
+    }
+}
