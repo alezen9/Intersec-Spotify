@@ -6,9 +6,9 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 // css
 import './Grid.css';
 // actions
-import { playPreviewSong, playableSongs } from '../../actions/index';
+import { playPreviewSong, playableSongs } from 'actions/index';
 // keys
-const keys = require('../../keys');
+const keys = require('keys');
 
 
 class Grid extends Component {
@@ -49,7 +49,7 @@ class Grid extends Component {
     }
 
     wolfFetch = () => {
-        const { sliders, checkedGenres, spotifyId, userType, playableSongs } = this.props;
+        const { sliders, checkedGenres, spotifyId, user, playableSongs } = this.props;
         let _options = {
             sliders: sliders,
             genres: checkedGenres.slice(0, 5)
@@ -67,7 +67,7 @@ class Grid extends Component {
         })
             .then(res => res.json())
             .then(data => {
-                let playableTracks = this.setPLayableTracks(data, userType, true);
+                let playableTracks = this.setPLayableTracks([], user.type, true);
                 playableTracks = playableTracks.filter(el => el.hasOwnProperty('index'));
                 playableSongs(playableTracks);
                 this.setState({ tracks: data.tracks });
@@ -78,7 +78,7 @@ class Grid extends Component {
     componentDidMount() {
         const { toSearch, wolf, spotifyId, userType, playableSongs } = this.props;
         if (toSearch && !wolf) {
-            fetch(keys.backend_url + 'api/top/' + toSearch + '/' + spotifyId)
+            fetch(`${keys.backend_url}api/top/${toSearch}/${spotifyId}`)
                 .then(res => res.json())
                 .then(data => {
                     //save playable tracks so we can skipNext and skipPrevious

@@ -11,10 +11,10 @@ import Search from '@material-ui/icons/Search';
 // css
 import './Wolf.css';
 // actions
-import { playPreviewSong, playableSongs, resetCheckedGenres } from '../../../actions/index';
+import { playPreviewSong, playableSongs, resetCheckedGenres } from 'actions/index';
 
 
-class Wolf extends Component {
+class DeepSearch extends Component {
 
   state = {
     showReccomandations: false,
@@ -93,4 +93,4 @@ const mapDidpatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDidpatchToProps)(Wolf);
+export default connect(mapStateToProps, mapDidpatchToProps)(DeepSearch);

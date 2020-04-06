@@ -1,59 +1,49 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Redirect } from 'react-router'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
+// utils
+import { get } from 'lodash'
 // components and pages
-import Login from './components/pages/Login/Login'
-import Navbar from './components/Navbar'
-import Home from './components/pages/Home/Home'
-import Analytics from './components/pages/Analytics/Analytics'
-import Wolf from './components/pages/Wolf/Wolf'
-// import Panther from './components/pages/Panther/Panther'
-import Decode from './components/pages/Decode/Decode'
-import Player from './components/Player'
+import Login from 'pages/Login/Login'
+import Navbar from 'components/Navbar'
+import Home from 'pages/Home/Home'
+import DeepSearch from 'pages/DeepSearch'
+import Decode from 'pages/Decode/Decode'
+import Player from 'components/Player'
 
-class App extends Component {
-  render () {
-    const { logged, showPlayer } = this.props
-    return (
-      <BrowserRouter>
-        {
-          logged
-            ? <div className='App'>
-              <Navbar />
-              <div className='content'>
-                <Switch>
-                  <Route exact path='/' component={Home} />
-                  <Route exact path='/analytics' component={Analytics} />
-                  <Route exact path='/wolf_discover' component={Wolf} />
-                  {/* <Route exact path='/panther_discover' component={Panther} /> */}
-                  <Redirect from='*' to='/' />
-                </Switch>
-              </div>
-              {
-                showPlayer
-                  ? <Player />
-                  : <div />
-              }
-            </div>
-            : <div>
-              <Switch>
-                <Route exact path='/' component={Login} />
-                <Route exact path='/decoding/:user' component={Decode} />
-                <Redirect from='*' to='/' />
-              </Switch>
-            </div>
-        }
-      </BrowserRouter>
-    )
-  }
+const App = props => {
+  const { logged, showPlayer } = useSelector(state => ({
+    logged: get(state, 'user.logged', false),
+    showPlayer: get(state, 'player.showPlayer', false)
+  }))
+
+  return (
+    <>
+      {logged
+        ? <div className='App'>
+          <Navbar />
+          <div className='content'>
+            <Switch>
+              <Route exact path='/' component={Home} />
+              <Route exact path='/deep-search' component={DeepSearch} />
+              <Redirect from='*' to='/' />
+            </Switch>
+          </div>
+          {showPlayer
+            ? <Player />
+            : <div />
+          }
+        </div>
+        : <div>
+          <Switch>
+            <Route exact path='/' component={Login} />
+            <Route exact path='/decoding/:user' component={Decode} />
+            <Redirect from='*' to='/' />
+          </Switch>
+        </div>}
+    </>
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    logged: state.logged,
-    showPlayer: state.showPlayer
-  }
-}
-
-export default connect(mapStateToProps)(App)
+export default App

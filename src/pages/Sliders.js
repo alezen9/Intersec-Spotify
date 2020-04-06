@@ -6,7 +6,7 @@ import './Sliders.css';
 import Button from '@material-ui/core/Button';
 import Cached from '@material-ui/icons/Cached';
 // actions
-import { setSlidersValue, resetSlidersValue } from '../../actions/index';
+import { setSlidersValue, resetSlidersValue } from '../actions/index';
 
 class Sliders extends Component {
     state = {

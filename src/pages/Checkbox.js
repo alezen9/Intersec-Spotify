@@ -9,7 +9,7 @@ import Select from '@material-ui/core/Select';
 // css
 import './Checkbox.css';
 // actions
-import { setCheckedGenres } from '../../actions/index';
+import { setCheckedGenres } from 'actions/index';
 
 let genres = [
     "acoustic",

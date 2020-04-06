@@ -4,11 +4,11 @@ import Button from '@material-ui/core/Button'
 // css
 import './Login.css'
 // keys
-const keys = require('../../../keys')
+const keys = require('keys')
 
 const Login = () => {
   const loginRedirect = () => {
-    window.location.replace(keys.backend_url + 'auth/spotify')
+    window.location.replace(`${keys.backend_url}auth/spotify`)
   }
 
   return (
