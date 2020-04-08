@@ -20,9 +20,13 @@ class IntersecServer {
    * @param {string} body.toSearch
    * @param {string} body.spotifyId
    */
-  async getTopTracks (body) {
+  async getTopTracksArtists (body) {
     const { toSearch, spotifyId } = body
-    return this._self.get(`/api/top/${toSearch}/${spotifyId}`)
+    return this._self.get(`api/top/${toSearch}/${spotifyId}`)
+  }
+
+  async logout () {
+    return this._self.get(`logout`)
   }
 }
 

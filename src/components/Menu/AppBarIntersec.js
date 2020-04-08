@@ -6,6 +6,10 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import { backgroundColor, typographyColor, boxShadow } from 'theme'
+import { Fab } from '@material-ui/core'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import { useDispatch } from 'react-redux'
+import { logout } from '_redux/actions/userActions'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,8 +31,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const LOGOUT_KEY = 'LOGOUT_KEY'
+
 const AppBarIntersec = React.forwardRef((props, ref) => {
   const { root, appBar, title, menuButton } = useStyles()
+  const dispatch = useDispatch()
+  const _logout = () => {
+    dispatch(logout({ key: LOGOUT_KEY }))
+  }
 
   return (
     <div className={root}>
@@ -44,7 +54,10 @@ const AppBarIntersec = React.forwardRef((props, ref) => {
             <MenuIcon />
           </IconButton>
           <Typography variant='h6' className={title}>
-            Intersec
+            <Fab variant='extended' onClick={_logout}>
+              <ExitToAppIcon />
+              Logout
+            </Fab>
           </Typography>
         </Toolbar>
       </AppBar>

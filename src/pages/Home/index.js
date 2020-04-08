@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 // css
 import './Home.css'
@@ -6,13 +6,13 @@ import './Home.css'
 import Grid from '../Grid'
 // actions
 import { setSpotifyPlayer, setDeviceId, setPlayerState } from 'actions/index'
-import { UserType } from 'redux/Entities'
+import { UserType, TopSearch } from '_redux/Entities'
 import IntersecTabs, { IntersecTab } from 'components/Tabs'
 import { get } from 'lodash'
-import { setupPlayer, getTopTracksArtists } from 'redux/actions/playerActions'
+import { getTopTracksArtists } from '_redux/actions/userActions'
 import Tracks from './Tracks'
-// keys
-const keys = require('keys')
+
+const GET_TOP_TRACKS_ARTISTS_KEY = 'GET_TOP_TRACKS_ARTISTS_KEY'
 
 const Home = props => {
   const dispatch = useDispatch()
@@ -27,6 +27,20 @@ const Home = props => {
     deviceId: get(state, 'user.deviceId', null),
     spotifyId: get(state, 'user.spotifyId', null)
   }))
+
+  const getData = useCallback(
+    () => {
+      dispatch(getTopTracksArtists({
+        key: GET_TOP_TRACKS_ARTISTS_KEY,
+        spotifyId
+      }))
+    },
+    [spotifyId, dispatch]
+  )
+
+  useEffect(() => {
+    getData()
+  }, [getData])
 
   // const createEventHandlers = () => {
   //   // errors
@@ -58,17 +72,17 @@ const Home = props => {
   //   }
   // }
 
-  useEffect(() => {
-    if (!player && userType === UserType.Premium) {
-      dispatch(setupPlayer({ spotifyId }))
-    }
-  }, [dispatch, player, userType, spotifyId])
+  // useEffect(() => {
+  //   if (!player && userType === UserType.Premium) {
+  //     dispatch(setupPlayer({ spotifyId }))
+  //   }
+  // }, [dispatch, player, userType, spotifyId])
 
-  useEffect(() => {
-    if (spotifyId) {
-      dispatch(getTopTracksArtists({ spotifyId }))
-    }
-  }, [dispatch, spotifyId])
+  // useEffect(() => {
+  //   if (spotifyId) {
+  //     dispatch(getTopTracksArtists({ key: GET_TOP_TRACKS_ARTISTS_KEY, spotifyId }))
+  //   }
+  // }, [dispatch, spotifyId])
 
   // useEffect(() => {
   //   if (player && !deviceId) connectPlayer()
@@ -83,7 +97,7 @@ const Home = props => {
     <div className='home'>
       <div className='wrapper'>
         <IntersecTabs>
-          <IntersecTab title='Tracks' component={<Tracks {...{ userType, spotifyId }} />} />
+          <IntersecTab title='Tracks' component={<Tracks {...{ userType, spotifyId, toSearch: 'tracks' }} />} />
           <IntersecTab title='Artists' component={<div />} />
         </IntersecTabs>
       </div>

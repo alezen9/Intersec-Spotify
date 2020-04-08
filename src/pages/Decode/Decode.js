@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 // css
 import './Decode.css'
 // actions
-import { setUser } from 'redux/actions/userActions'
+import { setUser } from '_redux/actions/userActions'
 import { useHistory, useLocation } from 'react-router'
 // utils
 import { get } from 'lodash'

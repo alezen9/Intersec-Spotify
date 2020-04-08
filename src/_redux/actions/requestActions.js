@@ -4,7 +4,7 @@ import {
   REQUEST_SUCCESS,
   REQUEST_RESET,
   REQUEST_RESET_BY_KEY
-} from 'redux/reduxKeys'
+} from '_redux/reduxKeys'
 
 export const requestIsFetching = dispatch => key => dispatch({
   type: REQUEST_FETCHING,
