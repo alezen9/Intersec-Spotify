@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux'
 import { get } from 'lodash'
 // components and pages
 import Login from 'pages/Login/Login'
-import Navbar from 'components/Navbar'
-import Home from 'pages/Home/Home'
+import Home from 'pages/Home'
 import DeepSearch from 'pages/DeepSearch'
 import Decode from 'pages/Decode/Decode'
 import Player from 'components/Player'
+import Menu from 'components/Menu'
 
 const App = props => {
   const { logged, showPlayer } = useSelector(state => ({
@@ -22,7 +22,7 @@ const App = props => {
     <>
       {logged
         ? <div className='App'>
-          <Navbar />
+          <Menu />
           <div className='content'>
             <Switch>
               <Route exact path='/' component={Home} />

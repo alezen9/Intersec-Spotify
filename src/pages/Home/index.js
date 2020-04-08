@@ -83,8 +83,6 @@ const Home = props => {
     <div className='home'>
       <div className='wrapper'>
         <IntersecTabs>
-          {/* <IntersecTab title='Tracks' component={<Grid toSearch='tracks' />} /> */}
-          {/* <IntersecTab title='Artists' component={<Grid toSearch='artists' />} /> */}
           <IntersecTab title='Tracks' component={<Tracks {...{ userType, spotifyId }} />} />
           <IntersecTab title='Artists' component={<div />} />
         </IntersecTabs>

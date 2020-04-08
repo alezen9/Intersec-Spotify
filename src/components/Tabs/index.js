@@ -8,6 +8,8 @@ import { Tabs, Tab, useMediaQuery } from '@material-ui/core'
 import SingleTab from './SingleTab'
 // utils
 import { compact } from 'lodash'
+// theme
+import { backgroundColor } from 'theme'
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -16,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     boxShadow: 'unset',
-    backgroundColor: 'transparent'
+    backgroundColor
   },
   tabs: {
     background: 'transparent'
