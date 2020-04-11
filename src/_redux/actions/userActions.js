@@ -36,6 +36,7 @@ export const logout = data => {
   return async (dispatch) => {
     try {
       requestIsFetching(dispatch)(key)
+      window.localStorage.removeItem('state')
       await apiInstance.logout()
       requestSuccess(dispatch)(key)
     } catch (error) {

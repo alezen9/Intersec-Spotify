@@ -26,7 +26,7 @@ class IntersecServer {
   }
 
   async logout () {
-    return this._self.get(`logout`)
+    return this._self.get(`auth/logout`)
   }
 }
 
