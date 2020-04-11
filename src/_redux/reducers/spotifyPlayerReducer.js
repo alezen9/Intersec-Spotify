@@ -1,4 +1,4 @@
-import { SET_PLAYER, SET_PLAYER_STATE, SET_DEVICE_ID, PLAY_TRACK, CLOSE_PLAYER, PLAYABLE_SONGS } from '../reduxKeys'
+import { SET_PLAYER, SET_PLAYER_STATE, SET_DEVICE_ID, PLAY_TRACK, CLOSE_PLAYER, PLAYABLE_SONGS, RESET_ALL } from '../reduxKeys'
 
 const initState = {
   player: undefined,
@@ -31,6 +31,8 @@ const spotifyPlayerReducer = (state = initState, { type, payload }) => {
         showPlayer: false,
         trackDetails: {}
       }
+    case RESET_ALL:
+      return initState
     default:
       return state
   }

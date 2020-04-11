@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 // material ui
 import Button from '@material-ui/core/Button'
 // css
 import './Login.css'
-// keys
-const keys = require('keys')
+import { apiInstance } from '_redux/actions/utils'
 
 const Login = () => {
-  const loginRedirect = () => {
-    window.location.replace(`${keys.backend_url}auth/spotify`)
-  }
+  const loginRedirect = () => apiInstance.login()
+
+  useEffect(() => {
+    window.localStorage.removeItem('intersecState')
+  }, [])
 
   return (
     <div className='wrapper_login'>

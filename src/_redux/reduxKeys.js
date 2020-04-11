@@ -1,6 +1,5 @@
 // userKeys
 export const SET_USER = 'SET_USER'
-export const LOGOUT = 'LOGOUT'
 // deepSearchKeys
 export const SET_SLIDERS = 'SET_SLIDERS'
 export const RESET_SLIDERS = 'RESET_SLIDERS'
@@ -19,3 +18,5 @@ export const REQUEST_FAILURE = 'REQUEST_FAILURE'
 export const REQUEST_SUCCESS = 'REQUEST_SUCCESS'
 export const REQUEST_RESET = 'REQUEST_RESET'
 export const REQUEST_RESET_BY_KEY = 'REQUEST_RESET_BY_KEY'
+// all
+export const RESET_ALL = 'RESET_ALL'

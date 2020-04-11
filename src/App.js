@@ -1,22 +1,34 @@
-import React from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { Redirect } from 'react-router'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { Switch, Route } from 'react-router-dom'
+import { Redirect, useLocation, useHistory } from 'react-router'
+import { useSelector, useDispatch } from 'react-redux'
 // utils
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
+// actions
+import { setUserToken } from '_redux/actions/userActions'
 // components and pages
 import Login from 'pages/Login/Login'
 import Home from 'pages/Home'
-import DeepSearch from 'pages/DeepSearch'
-import Decode from 'pages/Decode/Decode'
-import Player from 'components/Player'
 import Menu from 'components/Menu'
 
 const App = props => {
-  const { logged, showPlayer } = useSelector(state => ({
-    logged: get(state, 'user.logged', false),
-    showPlayer: get(state, 'player.showPlayer', false)
+  const { hash } = useLocation()
+  const history = useHistory()
+  const dispatch = useDispatch()
+
+  const { logged } = useSelector(state => ({
+    logged: get(state, 'user.logged', false)
   }))
+
+  useEffect(() => {
+    if (!isEmpty(hash)) {
+      dispatch(setUserToken({ hash }))
+    }
+  }, [hash])
+
+  useEffect(() => {
+    history.push('/')
+  }, [logged])
 
   return (
     <>
@@ -26,19 +38,13 @@ const App = props => {
           <div className='content'>
             <Switch>
               <Route exact path='/' component={Home} />
-              <Route exact path='/deep-search' component={DeepSearch} />
               <Redirect from='*' to='/' />
             </Switch>
           </div>
-          {showPlayer
-            ? <Player />
-            : <div />
-          }
         </div>
         : <div>
           <Switch>
             <Route exact path='/' component={Login} />
-            <Route exact path='/decoding/:user' component={Decode} />
             <Redirect from='*' to='/' />
           </Switch>
         </div>}

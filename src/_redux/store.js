@@ -7,7 +7,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const saveToLocalStorage = state => {
   try {
     const serializedState = JSON.stringify(state)
-    window.localStorage.setItem('state', serializedState)
+    window.localStorage.setItem('intersecState', serializedState)
   } catch (e) {
     console.log(e)
   }
@@ -15,7 +15,7 @@ const saveToLocalStorage = state => {
 
 const loadFromLocalStorage = () => {
   try {
-    const serializedState = window.localStorage.getItem('state')
+    const serializedState = window.localStorage.getItem('intersecState')
     if (serializedState === null) return undefined
     return JSON.parse(serializedState)
   } catch (e) {

@@ -1,4 +1,4 @@
-import { REQUEST_FAILURE, REQUEST_FETCHING, REQUEST_SUCCESS, REQUEST_RESET, REQUEST_RESET_BY_KEY } from '../reduxKeys'
+import { REQUEST_FAILURE, REQUEST_FETCHING, REQUEST_SUCCESS, REQUEST_RESET, REQUEST_RESET_BY_KEY, RESET_ALL } from '../reduxKeys'
 
 const initialState = {}
 
@@ -22,6 +22,8 @@ const requestReducer = (state = initialState, { type, payload }) => {
         ...state,
         ...value
       }
+    case RESET_ALL:
+      return initialState
     default:
       return state
   }

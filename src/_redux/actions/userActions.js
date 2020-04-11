@@ -1,33 +1,36 @@
-import { SET_USER } from '../reduxKeys'
+import { SET_USER, RESET_ALL } from '../reduxKeys'
 import { requestIsFetching, requestFailure, requestSuccess } from './requestActions'
-import { apiInstance } from './utils'
-import { TopSearch } from '../Entities'
+import { apiInstance, getTokenFromHash } from './utils'
 
-export const setUser = user => {
+export const setUserToken = data => {
+  const token = getTokenFromHash(data.hash)
+  if (token) {
+    apiInstance.setToken(token)
+    window.localStorage.setItem('intersecToken', token)
+  }
   return async (dispatch) => {
     dispatch({
       type: SET_USER,
       payload: {
-        logged: true,
-        ...user
+        logged: true
       }
     })
   }
 }
 
-export const getTopTracksArtists = data => {
-  const { key = 'GENERIC', ...body } = data
+export const checkTokenFromStorage = data => {
+  const token = getTokenFromHash(data.hash)
+  if (token) {
+    apiInstance.setToken(token)
+    window.localStorage.setItem('intersecToken', token)
+  }
   return async (dispatch) => {
-    try {
-      requestIsFetching(dispatch)(key)
-      const promises = [TopSearch.Tracks, TopSearch.Artists]
-        .map(toSearch => apiInstance.getTopTracksArtists({ toSearch, ...body }))
-      const [{ data: tracks }, { data: artists }] = await Promise.all(promises)
-      console.log(tracks, artists)
-      requestSuccess(dispatch)(key)
-    } catch (error) {
-      requestFailure(dispatch)(key, error)
-    }
+    dispatch({
+      type: SET_USER,
+      payload: {
+        logged: true
+      }
+    })
   }
 }
 
@@ -36,8 +39,10 @@ export const logout = data => {
   return async (dispatch) => {
     try {
       requestIsFetching(dispatch)(key)
-      window.localStorage.removeItem('state')
-      await apiInstance.logout()
+      const dispatchReset = () => {
+        dispatch({ type: RESET_ALL })
+      }
+      apiInstance.logout(dispatchReset)
       requestSuccess(dispatch)(key)
     } catch (error) {
       requestFailure(dispatch)(key, error)

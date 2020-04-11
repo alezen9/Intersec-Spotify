@@ -1,4 +1,4 @@
-import { SET_USER, LOGOUT } from '../reduxKeys'
+import { SET_USER, RESET_ALL } from '../reduxKeys'
 
 const initState = {
   logged: false,
@@ -15,7 +15,7 @@ const userReducer = (state = initState, { type, payload }) => {
         ...state,
         ...payload
       }
-    case LOGOUT:
+    case RESET_ALL:
       return initState
     default:
       return state

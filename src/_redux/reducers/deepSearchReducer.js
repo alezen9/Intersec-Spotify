@@ -1,4 +1,4 @@
-import { SET_SLIDERS, RESET_SLIDERS, SET_CHECKED_GENRES, RESET_CHECKED_GENRES } from '../reduxKeys'
+import { SET_SLIDERS, RESET_SLIDERS, SET_CHECKED_GENRES, RESET_CHECKED_GENRES, RESET_ALL } from '../reduxKeys'
 
 const initState = {
   checkedGenres: [],
@@ -21,6 +21,7 @@ const deepSearchReducer = (state = initState, { type, payload }) => {
         ...payload
       }
     case RESET_SLIDERS:
+    case RESET_ALL:
       return initState
     default:
       return state
