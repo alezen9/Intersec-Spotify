@@ -7,7 +7,7 @@
     "npm": "6.x.x"
   },
   "dependencies": {
-    "@material-ui/core": "4.9.7",
+    "@material-ui/core": "4.9.10",
     "@material-ui/icons": "4.9.1",
     "@vx/curve": "0.0.195",
     "@vx/event": "0.0.195",
@@ -18,9 +18,13 @@
     "@vx/tooltip": "0.0.195",
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
+    "clean-deep": "^3.3.0",
+    "graphql-tag": "^2.10.3",
     "lodash": "^4.17.15",
+    "notistack": "^0.9.9",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.9.0",
+    "react-detect-offline": "^2.4.0",
     "react-dom": "^16.13.1",
     "react-redux": "7.2.0",
     "react-router": "^5.1.2",

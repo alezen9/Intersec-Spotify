@@ -128,6 +128,11 @@ const theme = createMuiTheme({
       root: {
         boxShadow: 'unset !important'
       }
+    },
+    MuiDialog: {
+      paper: {
+        backgroundColor
+      }
     }
   }
 })

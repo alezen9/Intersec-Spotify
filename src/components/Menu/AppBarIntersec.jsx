@@ -2,14 +2,14 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import { backgroundColor, typographyColor, boxShadow } from 'theme'
-import { Fab } from '@material-ui/core'
+import { Fab, Avatar } from '@material-ui/core'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '_redux/actions/userActions'
+import { isEmpty } from 'lodash'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2)
   },
   title: {
-    color: typographyColor
+    display: 'flex',
+    alignItems: 'center'
   }
 }))
 
@@ -36,6 +37,7 @@ const LOGOUT_KEY = 'LOGOUT_KEY'
 const AppBarIntersec = React.forwardRef((props, ref) => {
   const { root, appBar, title, menuButton } = useStyles()
   const dispatch = useDispatch()
+  const { images, displayName } = useSelector(state => state.user || {})
   const _logout = () => {
     dispatch(logout({ key: LOGOUT_KEY }))
   }
@@ -53,12 +55,17 @@ const AppBarIntersec = React.forwardRef((props, ref) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant='h6' className={title}>
-            <Fab variant='extended' onClick={_logout}>
+          <div className={title}>
+            <Fab
+              style={{ color: 'white', backgroundColor: 'crimson', marginRight: '1em' }}
+              size='small'
+              onClick={_logout}>
               <ExitToAppIcon />
-              Logout
             </Fab>
-          </Typography>
+            <Avatar alt={displayName} src={!isEmpty(images) ? images[0] : ''}>
+              {displayName[0]}
+            </Avatar>
+          </div>
         </Toolbar>
       </AppBar>
     </div>

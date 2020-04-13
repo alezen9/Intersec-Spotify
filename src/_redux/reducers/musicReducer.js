@@ -1,20 +1,21 @@
-import { SET_USER, RESET_ALL, SET_USER_DATA } from '../reduxKeys'
+import { TOP_TRACKS_ARTISTS, RESET_ALL } from '../reduxKeys'
 
 const initState = {
-  logged: false,
-  type: undefined,
-  spotifyId: undefined,
-  displayName: '',
-  country: undefined
+  top: {
+    tracks: [],
+    artists: []
+  }
 }
 
 const userReducer = (state = initState, { type, payload }) => {
   switch (type) {
-    case SET_USER:
-    case SET_USER_DATA:
+    case TOP_TRACKS_ARTISTS:
       return {
         ...state,
-        ...payload
+        top: {
+          ...state.top,
+          ...payload
+        }
       }
     case RESET_ALL:
       return initState

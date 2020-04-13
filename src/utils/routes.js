@@ -1,11 +1,13 @@
 import React from 'react'
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded'
+// components
 import Home from 'pages/Home'
+// icons
+import HomeRoundedIcon from '@material-ui/icons/HomeRounded'
 
 export const sections = [
   {
     title: 'Home',
-    icon: <HomeRoundedIcon />,
+    icon: <HomeRoundedIcon color='primary' />,
     path: '/',
     component: Home
   }

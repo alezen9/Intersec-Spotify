@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const TabPanel = ({ children, value, index, title, outercomponent, ...other }) => {
+const TabPanel = ({ children, value, index, title, cardTitle, outercomponent, ...other }) => {
   const { box, outercomponentBox, titleStyle, divider } = useStyles()
   return (
     <Typography
@@ -49,7 +49,9 @@ const TabPanel = ({ children, value, index, title, outercomponent, ...other }) =
       {children && <Box p={3} className={box}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <Typography className={titleStyle} variant='h3'>{title}</Typography>
+            {cardTitle
+              ? <div className={titleStyle}>{cardTitle}</div>
+              : <Typography className={titleStyle} variant='h3'>{title}</Typography>}
             <Divider className={divider} light />
           </Grid>
           <Grid item xs={12}>
@@ -71,9 +73,9 @@ TabPanel.propTypes = {
 }
 
 export const SingleTab = props => {
-  const { value, index, title, component, outercomponent } = props
+  const { value, index, title, cardTitle, component, outercomponent } = props
   return (
-    <TabPanel value={value} index={index} title={title} outercomponent={outercomponent} >
+    <TabPanel value={value} index={index} title={title} outercomponent={outercomponent} cardTitle={cardTitle} >
       {component}
     </TabPanel>
   )
@@ -83,6 +85,7 @@ SingleTab.propTypes = {
   value: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  cardTitle: PropTypes.any,
   component: PropTypes.node,
   outercomponent: PropTypes.node
 }

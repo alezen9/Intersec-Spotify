@@ -81,6 +81,7 @@ const IntersecTabs = props => {
           value={value}
           index={i}
           title={child.props.title}
+          cardTitle={child.props.cardTitle}
           component={child.props.component}
           outercomponent={child.props.outercomponent}
         />)}
@@ -98,6 +99,7 @@ export const IntersecTab = props => <div {...props} />
 
 IntersecTab.propTypes = {
   title: PropTypes.string.isRequired,
+  cardTitle: PropTypes.any,
   component: PropTypes.node,
   outercomponent: PropTypes.node
 }

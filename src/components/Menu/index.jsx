@@ -5,6 +5,7 @@ import NavList from './NavList'
 
 const useStyles = makeStyles(({
   stickyAppBar: {
+    zIndex: 10,
     position: 'sticky',
     top: '.5rem',
     left: 0

@@ -6,6 +6,7 @@ import KeyboardArrowRightRoundedIcon from '@material-ui/icons/KeyboardArrowRight
 import { useHistory } from 'react-router-dom'
 import { sections } from 'utils/routes'
 import { compact, take } from 'lodash'
+import logo from 'assets/intersecFullLogo.svg'
 
 const useStyles = makeStyles({
   list: {
@@ -13,6 +14,14 @@ const useStyles = makeStyles({
   },
   fullList: {
     width: 'auto'
+  },
+  subheader: {
+    display: 'flex',
+    height: '4rem',
+    alignItems: 'center',
+    '&> img': {
+      height: '2rem'
+    }
   }
 })
 
@@ -86,11 +95,9 @@ const NavList = props => {
   return (
     <div className={classes.list} >
       <List
-        subheader={
-          <ListSubheader component='div' id='nested-list-subheader'>
-            DDreamkol
-          </ListSubheader>
-        }
+        subheader={<ListSubheader className={classes.subheader} component='div' id='nested-list-subheader'>{
+          <img src={logo} />
+        }</ListSubheader>}
         className={classes.root}
       >
         {routeBuilder()}

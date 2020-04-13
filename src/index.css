@@ -26,9 +26,9 @@ body {
 .App {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
 }
 
 .content{
-  transform: translateY(64px);
+  padding: 64px 1.5rem;
 }

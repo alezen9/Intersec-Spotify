@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import Button from '@material-ui/core/Button'
 // css
 import './Login.css'
-import { apiInstance } from '_redux/actions/utils'
+import { apiInstance } from 'SDK'
 
 const Login = () => {
   const loginRedirect = () => apiInstance.login()
