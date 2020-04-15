@@ -21,5 +21,6 @@ export const REQUEST_RESET = 'REQUEST_RESET'
 export const REQUEST_RESET_BY_KEY = 'REQUEST_RESET_BY_KEY'
 // music
 export const TOP_TRACKS_ARTISTS = 'TOP_TRACKS_ARTISTS'
+export const ITEM_DETAILS = 'ITEM_DETAILS'
 // all
 export const RESET_ALL = 'RESET_ALL'

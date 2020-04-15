@@ -73,7 +73,7 @@ const App = props => {
 
   useEffect(() => {
     history.push('/')
-  }, [logged])
+  }, [logged, history])
 
   useEffect(() => {
     dispatch(checkToken())

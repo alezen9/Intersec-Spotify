@@ -120,8 +120,7 @@ const theme = createMuiTheme({
     },
     MuiGrid: {
       root: {
-        wordBreak: 'break-word',
-        alignItems: 'baseline !important'
+        wordBreak: 'break-word'
       }
     },
     MuiCard: {
@@ -131,7 +130,76 @@ const theme = createMuiTheme({
     },
     MuiDialog: {
       paper: {
+        backgroundColor,
+        minHeight: 100
+      }
+    },
+    MuiPaper: {
+      root: {
+        backgroundColor: '#24252b'
+      }
+    },
+    MuiListItem: {
+      root: {
+        '&$selected': {
+          backgroundColor: 'transparent',
+          borderLeft: `2px solid ${teal[800]}`
+        }
+      }
+    },
+    MuiFormLabel: {
+      root: {
+        zIndex: 1,
+        color: teal[500]
+      }
+    },
+    MuiInputBase: {
+      root: {
+        color: typographyColor
+      }
+    },
+    MuiSelect: {
+      selectMenu: {
+        color: typographyColor,
         backgroundColor
+      },
+      icon: {
+        color: teal[500]
+      }
+    },
+    MuiOutlinedInput: {
+      notchedOutline: {
+        borderColor: teal[500],
+        '&:hover': {
+          borderColor: teal[800]
+        }
+      }
+    },
+    MuiInputLabel: {
+      root: {
+        backgroundColor,
+        padding: '0 .5em'
+      }
+    },
+    MuiButton: {
+      contained: {
+        color: `${typographyColor} !important`,
+        textTransform: 'none',
+        fontSize: '1em'
+      },
+      label: {
+        margin: 'auto 1em'
+      }
+    },
+    MuiDivider: {
+      root: {
+        backgroundColor: typographyColor,
+        width: '100%',
+        margin: '1em 0'
+      },
+      light: {
+        backgroundColor: typographyColor,
+        opacity: 0.3
       }
     }
   }

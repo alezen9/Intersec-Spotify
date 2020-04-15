@@ -96,7 +96,7 @@ const NavList = props => {
     <div className={classes.list} >
       <List
         subheader={<ListSubheader className={classes.subheader} component='div' id='nested-list-subheader'>{
-          <img src={logo} />
+          <img alt='intersec' src={logo} />
         }</ListSubheader>}
         className={classes.root}
       >

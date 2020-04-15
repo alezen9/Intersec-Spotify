@@ -5,6 +5,7 @@ import Artists from './2_Artists'
 import { Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
 import FilterListRoundedIcon from '@material-ui/icons/FilterListRounded'
 import Filters from 'components/Filters'
+import { trackArtistFilters } from './helpers'
 
 const Title = props => {
   const { title, openFiltersFn } = props
@@ -27,6 +28,7 @@ const Title = props => {
 
 const Home = props => {
   const [openFilters, setOpenFilters] = useState(false)
+  const [filterVals, setFilterVals] = useState({})
   const tracksTitleProps = useMemo(() => ({
     title: 'Tracks',
     openFiltersFn: () => setOpenFilters(true)
@@ -35,15 +37,17 @@ const Home = props => {
   return (
     <>
       <IntersecTabs>
-        <IntersecTab title='Tracks' cardTitle={<Title {...tracksTitleProps} />} component={<Tracks />} />
-        <IntersecTab title='Artists' component={<Artists />} />
+        <IntersecTab title='Tracks' cardTitle={<Title {...tracksTitleProps} />} component={<Tracks filters={filterVals} />} />
+        <IntersecTab title='Artists' component={<Artists filters={filterVals} />} />
       </IntersecTabs>
       <Filters
         open={openFilters}
         onClose={() => setOpenFilters(false)}
+        filters={trackArtistFilters}
+        onFiltersChange={vals => setFilterVals(vals)}
       />
     </>
   )
 }
 
-export default Home
+export default React.memo(Home)

@@ -5,12 +5,8 @@ import { FormControl, FormHelperText, Grid, IconButton, InputAdornment, Chip } f
 import { get } from 'lodash'
 import Lock from '@material-ui/icons/Lock'
 import LockOpen from '@material-ui/icons/LockOpen'
-import InputDate from './InputDate'
-import InputTime from './InputTime'
 import InputSelect from './InputSelect'
-import moment from 'moment'
 import InputSelectMultiple from './InputSelectMultiple'
-import InputAutocomplete from './InputAutocomplete'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -38,7 +34,7 @@ const FormikInput = props => {
     handleChange,
     helperText = '',
     errors = {},
-    variant = 'filled',
+    variant = 'outlined',
     disabled = false,
     xs = 12,
     sm,
@@ -65,26 +61,8 @@ const FormikInput = props => {
         endAdornment: <Adornment />
       }
       break
-    case 'date':
-      const onChangeDate = (v) => props.setFieldValue(name, v ? moment(v, 'hh:mm') : null, true)
-      return (
-        <Grid item xs={xs} sm={sm || xs} lg={lg || sm || xs} xl={xl || lg || sm || xs}>
-          <FormControl variant={variant} className={formControl}>
-            <InputDate {...defaultProps} formControl={formControl} onChange={onChangeDate} />
-          </FormControl>
-        </Grid>
-      )
-    case 'time':
-      const onChangeTime = (v) => props.setFieldValue(name, v, true)
-      return (
-        <Grid item xs={xs} sm={sm || xs} lg={lg || sm || xs} xl={xl || lg || sm || xs}>
-          <FormControl variant={variant} className={formControl}>
-            <InputTime {...defaultProps} formControl={formControl} onChange={onChangeTime} />
-          </FormControl>
-        </Grid>
-      )
     case 'select':
-      const onChangeSelect = (e, d) => props.setFieldValue(name, { value: d.props.value, label: d.props.children }, true)
+      const onChangeSelect = (e, d) => props.setFieldValue(name, e.target.value, true)
       return (
         <Grid item xs={xs} sm={sm || xs} lg={lg || sm || xs} xl={xl || lg || sm || xs}>
           <FormControl variant={variant} className={formControl} style={{ marginTop: 16 }}>
@@ -114,15 +92,6 @@ const FormikInput = props => {
             <InputSelectMultiple {...defaultProps} formControl={formControl} onChange={onChangeSelectMultiple} />
           </FormControl>
           {renderChips()}
-        </Grid>
-      )
-    case 'select-autocomplete':
-      const onAutocompleteSelectChange = (e, d) => console.log(e, d)
-      return (
-        <Grid item xs={xs} sm={sm || xs} lg={lg || sm || xs} xl={xl || lg || sm || xs}>
-          <FormControl variant={variant} className={formControl} style={{ marginTop: 16 }}>
-            <InputAutocomplete {...defaultProps} formControl={formControl} onChange={onAutocompleteSelectChange} />
-          </FormControl>
         </Grid>
       )
     default:

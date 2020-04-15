@@ -1,7 +1,7 @@
-import { TOP_TRACKS_ARTISTS } from '../reduxKeys'
+import { TOP_TRACKS_ARTISTS, ITEM_DETAILS } from '../reduxKeys'
 import { requestIsFetching, requestFailure, requestSuccess } from './requestActions'
 import { apiInstance } from 'SDK'
-import { _getTopTracksArtists } from 'SDK/query'
+import { _getTopTracksArtists, _getTrackById } from 'SDK/query'
 
 export const getTopTracksArtists = data => {
   const { key = 'GENERIC_KEY', type = 'tracks', offset, limit, timeRange } = data
@@ -17,6 +17,24 @@ export const getTopTracksArtists = data => {
         payload: {
           [type]: res
         }
+      })
+      requestSuccess(dispatch)(key)
+    } catch (error) {
+      requestFailure(dispatch)(key, error)
+    }
+  }
+}
+
+export const getTrackById = data => {
+  const { key = 'GENERIC_KEY', id } = data
+  return async (dispatch, getState) => {
+    try {
+      requestIsFetching(dispatch)(key)
+      const query = _getTrackById({ id })
+      const res = await apiInstance.graphql(query)
+      dispatch({
+        type: ITEM_DETAILS,
+        payload: res
       })
       requestSuccess(dispatch)(key)
     } catch (error) {

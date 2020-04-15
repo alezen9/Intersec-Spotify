@@ -26,15 +26,38 @@ export const _getUserData = () => ({
 /**
  *
  * @param {any} input
-* @param {string} input.type tracks|artirts
-* @param {number} input.offset
-* @param {number} input.limit
-* @param {string} input.timeRange short_term|medium_term|long_term
-* short_term => 4 weeks
-* medium_term => 6 months
-* long_term => several years
+* @param {string} input.id tracks
+* @param {any} input.fields fields to query
  */
-export const _getTopTracksArtists = (input) => {
+export const _getTrackById = input => {
+  const { id, fields } = input
+  const _fields = JSON.stringify(fields) ||
+    `{
+      id,
+      name,
+      artists{
+        id,
+        name,
+        images
+      },
+      duration,
+      popularity,
+      album {
+        id,
+        name,
+        images
+      }
+    }`
+  return {
+    name: 'getTrackById',
+    query: `
+    query {
+      getTrackById(id: "${id}") ${_fields}
+    }`
+  }
+}
+
+export const _getTopTracksArtists = input => {
   const params = stringifyJSON(cleanDeep(input))
   const fields = input.type === TopSearch.Tracks
     ? `{
@@ -50,10 +73,7 @@ export const _getTopTracksArtists = (input) => {
         album {
           id,
           name,
-          images {
-            url,
-            isSquare
-          }
+          images
         },
         artists {
           id,
@@ -65,10 +85,7 @@ export const _getTopTracksArtists = (input) => {
         ... on Artist {
           id,
           name,
-          images {
-            url,
-            isSquare
-          }
+          images
         }
     }`
 

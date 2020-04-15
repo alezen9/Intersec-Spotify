@@ -1,11 +1,12 @@
 import React from 'react'
-import { get, find } from 'lodash'
+import { get } from 'lodash'
 import { Select, MenuItem, InputLabel, FormHelperText, FilledInput, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
   menuItem: {
-    minWidth: 250
+    minWidth: 250,
+    width: '100%'
   }
 }))
 
@@ -17,11 +18,6 @@ const InputSelect = ({ options = null, label, id, name, required, handleChange, 
       <Typography>{opt.label}</Typography>
     </MenuItem>)
 
-  const renderValue = (v) => {
-    const res = find(options, ['value', v])
-    return res ? res.label : null
-  }
-
   const input = variant === 'filled' ? { input: <FilledInput name={name} /> } : {}
 
   return (
@@ -29,19 +25,13 @@ const InputSelect = ({ options = null, label, id, name, required, handleChange, 
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <Select
         disabled={disabled}
-        label={label}
-        value={get(values, `${name}.value`, '')}
-        renderValue={renderValue}
+        value={get(values, `${name}`, '')}
         onChange={onChange}
-        autoWidth
-        variant='filled'
+        variant={variant}
         {...input}
         inputProps={{ id }}
       >
       >
-        <MenuItem className={menuItem} key={-1} value=''>
-          <Typography>-</Typography>
-        </MenuItem>
         {Options(options)}
       </Select>
       {get(errors, name, false) && <FormHelperText margin='dense' style={{ color: 'red' }} id={`${id}_error`}>{errors[name]}</FormHelperText>}

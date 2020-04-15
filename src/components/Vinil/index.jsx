@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
 import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
 import CustomDialog from 'components/Dialog'
@@ -46,25 +46,22 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     bottom: 0,
     left: 0,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    display: 'flex',
+    justifyContent: 'space-between'
   }
 }))
 
 const Vinil = props => {
-  const { id, name = 'Vinil', background, infoHeader, infoSubheader } = props
+  const { id, name = 'Vinil', background, infoHeader, infoSubheader, actions, details } = props
   const classes = useStyles()
-  const imgRef = useRef(null)
   const [openDialog, setOpenDialog] = useState(false)
-
-  useEffect(() => {
-    if (imgRef.current && !background.isSquare) console.log(imgRef)
-  }, [imgRef.current, background.isSquare])
 
   return (
     <>
       <Grid item xs={6} sm={3} md={2} className={classes.container}>
         <div className={classes.wrapper} >
-          <img id={`image-${id}`} ref={imgRef} alt={name} src={background.url} className={classes.image} />
+          <img id={`image-${id}`} alt={name} src={background} className={classes.image} />
           <Grid container direction='column' className={classes.info} justify='space-between'>
             {/* INFO */}
             <Grid item container spacing={0}>
@@ -77,7 +74,8 @@ const Vinil = props => {
             </Grid>
             {/* ACTIONS */}
             <Grid item container spacing={3} justify='flex-end' className={classes.actions}>
-              <Grid item>
+              {actions || <></>}
+              <Grid item style={{ marginLeft: 'auto' }}>
                 <Tooltip
                   title='Details'
                   onClick={() => setOpenDialog(true)}
@@ -95,6 +93,7 @@ const Vinil = props => {
         title={name}
         open={openDialog}
         onClose={() => setOpenDialog(false)}
+        content={details}
       />
     </>
   )

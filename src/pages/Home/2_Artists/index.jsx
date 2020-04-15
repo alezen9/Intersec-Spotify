@@ -32,7 +32,7 @@ const Artists = props => {
         id={artist.id}
         key={`top-artist-${i}`}
         name={artist.name}
-        background={get(artist, 'images', []).find(({ isSquare }) => isSquare) || get(artist, 'images[0]', {})}
+        background={get(artist, 'images[0]', '')}
         infoHeader={artist.name}
       />)}
     </Grid>
