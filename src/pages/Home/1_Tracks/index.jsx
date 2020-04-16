@@ -78,7 +78,7 @@ const Tracks = props => {
           id={track.id}
           key={`top-track-${i}`}
           name={track.name}
-          background={get(track, 'album.images[0]', '')}
+          background={get(track, 'album.images[0].url', '')}
           infoHeader={get(track, 'artists[0].name', '')}
           infoSubheader={track.name}
           actions={<Actions url={track.previewUri} />}

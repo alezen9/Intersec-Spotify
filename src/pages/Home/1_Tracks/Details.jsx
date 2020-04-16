@@ -37,7 +37,7 @@ const TrackDetails = props => {
     <>
       <Grid container spacing={3} style={{ margin: 0 }}>
         <Grid item xs={4} >
-          <img className={classes.img} alt={get(details, 'album.name', 'cover')} src={get(details, 'album.images[0]', '')} />
+          <img className={classes.img} alt={get(details, 'album.name', 'cover')} src={get(details, 'album.images[0].url', '')} />
         </Grid>
         <Grid item container spacing={0} xs={8}>
           {get(details, 'artists', []).map(artist =>
@@ -46,7 +46,7 @@ const TrackDetails = props => {
               xs={12}
               avatar={{
                 alt: artist.name,
-                src: get(artist, 'images[0]', '')
+                src: get(artist, 'images[0].url', '')
               }}
               value={artist.name}
               label='Artist'

@@ -38,14 +38,22 @@ export const _getTrackById = input => {
       artists{
         id,
         name,
-        images
+        images{
+          width,
+          height,
+          url
+        }
       },
       duration,
       popularity,
       album {
         id,
         name,
-        images
+        images{
+          width,
+          height,
+          url
+        }
       }
     }`
   return {
@@ -73,7 +81,11 @@ export const _getTopTracksArtists = input => {
         album {
           id,
           name,
-          images
+          images{
+            width,
+            height,
+            url
+          }
         },
         artists {
           id,
@@ -85,7 +97,11 @@ export const _getTopTracksArtists = input => {
         ... on Artist {
           id,
           name,
-          images
+          images{
+            width,
+            height,
+            url
+          }
         }
     }`
 
