@@ -2,93 +2,115 @@ import React, { useState } from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
 import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
 import CustomDialog from 'components/Dialog'
+import { EquilizerIcon } from 'assets/CustomIcons'
 
-const useStyles = makeStyles(theme => ({
-  container: {
-    position: 'relative',
-    overflow: 'hidden',
-    cursor: 'pointer',
-    '&:hover': {
-      '&>div': {
-        overflow: 'hidden',
-        marginBottom: -19
+const useStyles = makeStyles(theme => {
+  const padding = theme.spacing(2)
+  return {
+    container: {
+      position: 'relative',
+      overflow: 'hidden',
+      cursor: 'pointer',
+      padding: padding,
+      '&:before': {
+        backgroundImage: ({ background }) => `url(${background})`,
+        backgroundSize: 'cover',
+        position: 'absolute',
+        content: '""',
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+        transition: 'all .1s ease-in'
       },
-      '&>div>img': {
-        filter: 'blur(10px) brightness(.5)'
-      },
-      '&>div>div': {
-        opacity: 1,
-        pointerEvents: 'all'
+      '&:hover': {
+        '&:before': {
+          filter: 'blur(10px) brightness(.5)'
+        },
+        '&>*': {
+          visibility: 'visible',
+          pointerEvents: 'auto'
+        }
       }
+    },
+    header: {
+      position: 'relative',
+      width: '100%',
+      height: '100%',
+      '&>*': {
+        position: 'relative'
+      },
+      '&:before': {
+        position: 'absolute',
+        content: '""',
+        width: `calc(100% + ${padding * 2}px)`,
+        height: '70%',
+        top: -padding,
+        left: 0,
+        margin: `0 ${-padding}px`,
+        background: 'linear-gradient(to bottom,rgba(0, 0, 0, .85), transparent)',
+        transition: 'all .1s ease-in'
+      }
+    },
+    equilizerContainer: {
+      display: 'flex',
+      justifyContent: 'space-between'
+    },
+    info: {
+      position: 'absolute',
+      padding: theme.spacing(),
+      boxSizing: 'border-box',
+      height: `calc(100% - ${theme.spacing()}px)`,
+      width: '100%',
+      top: 0,
+      left: 0,
+      opacity: 0,
+      pointerEvents: 'none'
+    },
+    actions: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      boxSizing: 'border-box',
+      display: 'flex',
+      justifyContent: 'space-between',
+      visibility: 'hidden',
+      pointerEvents: 'none'
     }
-  },
-  wrapper: {
-    position: 'relative'
-  },
-  info: {
-    position: 'absolute',
-    padding: theme.spacing(),
-    boxSizing: 'border-box',
-    height: `calc(100% - ${theme.spacing()}px)`,
-    width: '100%',
-    top: 0,
-    left: 0,
-    opacity: 0,
-    pointerEvents: 'none'
-  },
-  image: {
-    width: '100%',
-    objectFit: 'contain',
-    overflow: 'hidden',
-    transition: 'all .2s ease-out'
-  },
-  actions: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    boxSizing: 'border-box',
-    display: 'flex',
-    justifyContent: 'space-between'
   }
-}))
+})
 
 const Vinil = props => {
   const { id, name = 'Vinil', background, infoHeader, infoSubheader, actions, details } = props
-  const classes = useStyles()
+  const classes = useStyles({ background })
   const [openDialog, setOpenDialog] = useState(false)
 
   return (
     <>
-      <Grid item xs={6} sm={3} md={2} className={classes.container}>
-        <div className={classes.wrapper} >
-          <img id={`image-${id}`} alt={name} src={background} className={classes.image} />
-          <Grid container direction='column' className={classes.info} justify='space-between'>
-            {/* INFO */}
-            <Grid item container spacing={0}>
-              <Grid item xs={12}>
-                <Typography variant='h6'>{infoHeader}</Typography>
-              </Grid>
-              {infoSubheader && <Grid item xs={12}>
-                <Typography variant='caption'>{infoSubheader}</Typography>
-              </Grid>}
-            </Grid>
-            {/* ACTIONS */}
-            <Grid item container spacing={3} justify='flex-end' className={classes.actions}>
-              {actions || <></>}
-              <Grid item style={{ marginLeft: 'auto' }}>
-                <Tooltip
-                  title='Details'
-                  onClick={() => setOpenDialog(true)}
-                  arrow>
-                  <IconButton color='primary' aria-label='Details'>
-                    <DetailsRoundedIcon />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            </Grid>
-          </Grid>
+      <div id={id} className={classes.container} >
+        {/* INFO */}
+        <div className={classes.header}>
+          <div className={classes.equilizerContainer}>
+            <Typography variant='h6'>{infoHeader}</Typography>
+            {/* <EquilizerIcon color='primary' /> */}
+          </div>
+          {infoSubheader && <Typography variant='caption'>{infoSubheader}</Typography>}
         </div>
-      </Grid>
+        {/* ACTIONS */}
+        <Grid item container justify='flex-end' className={classes.actions}>
+          {actions || <></>}
+          <Grid item style={{ marginLeft: 'auto' }}>
+            <Tooltip
+              title='Details'
+              onClick={() => setOpenDialog(true)}
+              arrow>
+              <IconButton color='primary' aria-label='Details'>
+                <DetailsRoundedIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
+      </div>
       <CustomDialog
         title={name}
         open={openDialog}

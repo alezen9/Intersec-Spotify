@@ -32,3 +32,12 @@ export const stringifyJSON = obj => {
     .join(',')
   return `{${props}}`
 }
+
+export const lazyLoadImage = url => new Promise((resolve, reject) => {
+  const downloadedImg = new Image()
+  downloadedImg.onload = () => {
+    console.log('loaded')
+    return resolve(url)
+  }
+  downloadedImg.src = url
+})

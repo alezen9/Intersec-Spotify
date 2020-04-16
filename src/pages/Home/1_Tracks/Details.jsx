@@ -36,7 +36,7 @@ const TrackDetails = props => {
   return (
     <>
       <Grid container spacing={3} style={{ margin: 0 }}>
-        <Grid item xs={4} >
+        <Grid item xs={4}>
           <img className={classes.img} alt={get(details, 'album.name', 'cover')} src={get(details, 'album.images[0].url', '')} />
         </Grid>
         <Grid item container spacing={0} xs={8}>

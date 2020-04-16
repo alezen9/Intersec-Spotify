@@ -5,6 +5,10 @@ body {
   background-color: #1A1B1F;
 }
 
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 2px;

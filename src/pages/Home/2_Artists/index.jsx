@@ -5,6 +5,7 @@ import { getTopTracksArtists } from '_redux/actions/musicActions'
 import Vinil from 'components/Vinil'
 import { TopSearch } from '_redux/Entities'
 import { get } from 'lodash'
+import GridLayout from 'components/GridLayout'
 
 const GET_TOP_ARTISTS_KEY = 'GET_TOP_ARTISTS_KEY'
 
@@ -27,15 +28,24 @@ const Artists = props => {
   }, [getData])
 
   return (
-    <Grid container spacing={3} alignItems='stretch'>
-      {artists.items && artists.items.map((artist, i) => <Vinil
-        id={artist.id}
-        key={`top-artist-${i}`}
-        name={artist.name}
-        background={get(artist, 'images[0].url', '')}
-        infoHeader={artist.name}
-      />)}
-    </Grid>
+    <GridLayout>
+      {/* {artists.items && artists.items.map((artist, i) => {
+        return <Vinil
+          id={`top-artist-${i}`}
+          key={`top-artist-${i}`}
+          name={artist.name}
+          backgrounds={artist.images}
+        />
+      })} */}
+      {artists.items && artists.items.map((artist, i) =>
+        <Vinil
+          id={artist.id}
+          key={`top-artist-${i}`}
+          name={artist.name}
+          background={get(artist, 'images[0].url', '')}
+          infoHeader={artist.name}
+        />)}
+    </GridLayout>
   )
 }
 

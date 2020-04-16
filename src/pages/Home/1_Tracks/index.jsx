@@ -8,6 +8,7 @@ import { get } from 'lodash'
 import PauseCircleFilledRoundedIcon from '@material-ui/icons/PauseCircleFilledRounded'
 import PlayCircleFilledRoundedIcon from '@material-ui/icons/PlayCircleFilledRounded'
 import TrackDetails from './Details'
+import GridLayout from 'components/GridLayout'
 
 const GET_TOP_TRACKS_KEY = 'GET_TOP_TRACKS_KEY'
 
@@ -72,7 +73,7 @@ const Tracks = props => {
   }, [getData])
 
   return (
-    <Grid container spacing={3} alignItems='stretch'>
+    <GridLayout>
       {tracks.items && tracks.items.map((track, i) => {
         return <Vinil
           id={track.id}
@@ -85,7 +86,7 @@ const Tracks = props => {
           details={<TrackDetails id={track.id} />}
         />
       })}
-    </Grid>
+    </GridLayout>
   )
 }
 
