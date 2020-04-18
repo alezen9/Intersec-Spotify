@@ -42,7 +42,7 @@ const Lyrics = props => {
         id: trackId
       }))
     }
-  }, [dispatch, lyrics, showLyrics])
+  }, [dispatch, lyrics, showLyrics, trackId])
 
   return (
     <div className={classes.root}>

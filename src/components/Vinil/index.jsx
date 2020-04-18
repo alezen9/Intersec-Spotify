@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
 import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
 import CustomDialog from 'components/Dialog'
-import { EquilizerIcon } from 'assets/CustomIcons'
+// import { EquilizerIcon } from 'assets/CustomIcons'
 
 const useStyles = makeStyles(theme => {
   const padding = theme.spacing(2)
@@ -11,7 +11,9 @@ const useStyles = makeStyles(theme => {
       position: 'relative',
       overflow: 'hidden',
       cursor: 'pointer',
+      height: '100%',
       padding: padding,
+      borderRadius: 5,
       '&:before': {
         backgroundImage: ({ background }) => `url(${background})`,
         backgroundSize: 'cover',

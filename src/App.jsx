@@ -24,12 +24,19 @@ import Fab from '@material-ui/core/Fab'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import { IconButton, useScrollTrigger } from '@material-ui/core'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   closeFab: {
     color: 'white',
     fontSize: 25
+  },
+  content: {
+    padding: '1.5em',
+    boxSizing: 'border-box',
+    [theme.breakpoints.down('xs')]: {
+      padding: '1em'
+    }
   }
-})
+}))
 
 const SwitchRoutes = React.memo(() => {
   return <Switch>
@@ -55,7 +62,7 @@ const App = props => {
   const { logged } = useSelector(state => ({
     logged: get(state, 'user.logged', false)
   }))
-  const { closeFab } = useStyles()
+  const { closeFab, content } = useStyles()
   const action = useCallback(
     key => {
       return <IconButton className={closeFab} aria-label='Chiudi' onClick={() => { closeSnackbar(key) }}>
@@ -115,7 +122,7 @@ const App = props => {
         {logged
           ? <>
             <Menu />
-            <div style={{ padding: '1.5em', boxSizing: 'border-box' }}>
+            <div className={content}>
               <SwitchRoutes />
             </div>
             <ScrollTop >

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles, List, ListSubheader, ListItemIcon, ListItem, ListItemText, Collapse } from '@material-ui/core'
+import { makeStyles, List, ListSubheader, ListItemIcon, ListItem, ListItemText, Collapse, Typography } from '@material-ui/core'
 import ArrowDropDownRoundedIcon from '@material-ui/icons/ArrowDropDownRounded'
 import ArrowDropUpRoundedIcon from '@material-ui/icons/ArrowDropUpRounded'
 import KeyboardArrowRightRoundedIcon from '@material-ui/icons/KeyboardArrowRightRounded'
@@ -102,8 +102,17 @@ const NavList = props => {
       >
         {routeBuilder()}
       </List>
+      <Copyrights />
     </div>
   )
+}
+
+const Copyrights = () => {
+  return <div style={{ position: 'absolute', bottom: '1em', width: '100%', textAlign: 'center' }}>
+    <Typography variant='caption' align='center' style={{ margin: 'auto' }}>
+      {`© Aleksandar Gjoreski - ${new Date().getFullYear()}`}
+    </Typography>
+  </div>
 }
 
 export default NavList

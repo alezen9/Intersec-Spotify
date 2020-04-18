@@ -8,6 +8,7 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: ({ minColumnWidthPx }) => `repeat(auto-fill, minmax(${minColumnWidthPx}px, 1fr))`,
     gridAutoRows: '1fr',
     overflow: 'hidden',
+    listStyle: 'none',
     gridGap: ({ spacing }) => spacing,
     '&:before': {
       content: '""',

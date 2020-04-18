@@ -1,4 +1,4 @@
-import { requestIsFetching, requestSuccess, requestFailure } from './requestActions'
+// import { requestIsFetching, requestSuccess, requestFailure } from './requestActions'
 import { SET_ACTIVE_SECTION } from '_redux/reduxKeys'
 
 export const setActiveSection = data => {

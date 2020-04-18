@@ -126,7 +126,7 @@ const AppBarIntersec = React.forwardRef((props, ref) => {
         onClose={handleCloseMenu}
         className={menuClass}
       >
-        <MenuItem onClick={() => console.log('profile')}>
+        <MenuItem disabled onClick={() => console.log('profile')}>
           <PersonRoundedIcon color='primary' style={{ marginRight: '1em' }} />
           <Typography variant='body2'>Profile</Typography>
         </MenuItem>

@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
-import { Tooltip, IconButton, Typography, Grid, makeStyles, useTheme, useMediaQuery } from '@material-ui/core'
+import { IconButton, Typography, Grid, makeStyles, useTheme, useMediaQuery } from '@material-ui/core'
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
 
 const Transition = React.forwardRef((props, ref) => {
