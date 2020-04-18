@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
-import { Tooltip, IconButton, Typography, Grid, makeStyles } from '@material-ui/core'
+import { Tooltip, IconButton, Typography, Grid, makeStyles, useTheme, useMediaQuery } from '@material-ui/core'
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
 
 const Transition = React.forwardRef((props, ref) => {
@@ -14,7 +14,7 @@ const Transition = React.forwardRef((props, ref) => {
 
 const useStyles = makeStyles(theme => ({
   content: {
-    height: '85vh',
+    height: ({ fullHeight }) => fullHeight ? '85vh' : 'auto',
     overflowY: 'auto'
   }
 }))
@@ -28,10 +28,12 @@ const CustomDialog = props => {
     content,
     actions,
     maxWidth = 'sm',
+    fullHeight = true,
     overflowY = 'auto'
   } = props
-
-  const classes = useStyles()
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
+  const classes = useStyles({ fullHeight })
 
   return (
     <Dialog
@@ -40,24 +42,23 @@ const CustomDialog = props => {
       keepMounted={false}
       onClose={onClose}
       fullWidth
+      fullScreen={isSmallScreen}
       maxWidth={maxWidth}
       aria-labelledby='details'
       aria-describedby='details'
     >
       {title && <DialogTitle id='alert-dialog-slide-title' >
         <Grid container spacing={3} justify='space-between'>
-          <Grid item>
+          <Grid item xs={10}>
             <Typography variant='h3'>{title}</Typography>
           </Grid>
-          <Grid item align='right' style={{ padding: 0 }}>
-            <Tooltip
-              title='Filters'
+          <Grid item align='right' style={{ padding: 0 }} xs={2}>
+            <IconButton
+              color='primary'
               onClick={onClose}
-              arrow>
-              <IconButton color='primary' aria-label='Filters'>
-                <CloseRoundedIcon />
-              </IconButton>
-            </Tooltip>
+              aria-label='Close'>
+              <CloseRoundedIcon />
+            </IconButton>
           </Grid>
         </Grid>
       </DialogTitle>}

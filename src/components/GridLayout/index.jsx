@@ -27,10 +27,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const GridLayout = props => {
-  const { children, spacing = '1em', minColumnWidthPx = 200 } = props
+  const { children, spacing = '1em', minColumnWidthPx = 200, id } = props
   const { main } = useStyles({ spacing, minColumnWidthPx })
   return (
-    <div className={main}>
+    <div {...id && { id }} className={main}>
       {children}
     </div>
   )

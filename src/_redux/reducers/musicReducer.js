@@ -1,4 +1,4 @@
-import { TOP_TRACKS_ARTISTS, ITEM_DETAILS, RESET_ALL } from '../reduxKeys'
+import { TOP_TRACKS_ARTISTS, ITEM_DETAILS, LYRICS, RESET_ALL } from '../reduxKeys'
 
 const initState = {
   top: {
@@ -21,6 +21,14 @@ const userReducer = (state = initState, { type, payload }) => {
       return {
         ...state,
         details: payload
+      }
+    case LYRICS:
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          ...payload
+        }
       }
     case RESET_ALL:
       return initState

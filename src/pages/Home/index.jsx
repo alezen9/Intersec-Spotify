@@ -42,6 +42,7 @@ const Home = props => {
       </IntersecTabs>
       <Filters
         open={openFilters}
+        fullHeight={false}
         onClose={() => setOpenFilters(false)}
         filters={trackArtistFilters}
         onFiltersChange={vals => setFilterVals(vals)}

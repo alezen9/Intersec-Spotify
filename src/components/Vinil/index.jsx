@@ -84,7 +84,6 @@ const Vinil = props => {
   const { id, name = 'Vinil', background, infoHeader, infoSubheader, actions, details } = props
   const classes = useStyles({ background })
   const [openDialog, setOpenDialog] = useState(false)
-
   return (
     <>
       <div id={id} className={classes.container} >

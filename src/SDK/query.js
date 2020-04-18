@@ -65,6 +65,24 @@ export const _getTrackById = input => {
   }
 }
 
+/**
+ *
+ * @param {any} input
+* @param {string} input.id tracks
+ */
+export const _getTrackLyrics = input => {
+  const { id } = input
+  return {
+    name: 'getTrackById',
+    query: `
+    query {
+      getTrackById(id: "${id}") {
+        lyrics
+      }
+    }`
+  }
+}
+
 export const _getTopTracksArtists = input => {
   const params = stringifyJSON(cleanDeep(input))
   const fields = input.type === TopSearch.Tracks

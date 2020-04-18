@@ -45,7 +45,7 @@ const tabProps = (index, classes) => {
   }
 }
 
-const IntersecTabs = props => {
+const IntersecTabs = React.forwardRef((props, ref) => {
   const { children } = props
   const { wrapper, appBar, tabs, tabSelected, tab } = useStyles()
   const [value, setValue] = useState(0)
@@ -54,7 +54,7 @@ const IntersecTabs = props => {
   const handleChange = (e, newValue) => setValue(newValue)
 
   return (
-    <div className={wrapper}>
+    <div ref={ref} className={wrapper}>
       <AppBar className={appBar} position='static'>
         <Tabs
           variant={isSmallScreen ? 'scrollable' : 'standard'}
@@ -87,7 +87,7 @@ const IntersecTabs = props => {
         />)}
     </div>
   )
-}
+})
 
 export default IntersecTabs
 

@@ -9,6 +9,7 @@ import PauseCircleFilledRoundedIcon from '@material-ui/icons/PauseCircleFilledRo
 import PlayCircleFilledRoundedIcon from '@material-ui/icons/PlayCircleFilledRounded'
 import TrackDetails from './Details'
 import GridLayout from 'components/GridLayout'
+import { setActiveSection } from '_redux/actions/configActions'
 
 const GET_TOP_TRACKS_KEY = 'GET_TOP_TRACKS_KEY'
 
@@ -57,6 +58,14 @@ const Tracks = props => {
   const dispatch = useDispatch()
   const { tracks } = useSelector(state => state.music.top)
 
+  useEffect(() => {
+    const target = document.querySelector('#tracks-grid')
+    dispatch(setActiveSection({
+      target,
+      title: 'Tracks'
+    }))
+  }, [dispatch])
+
   const getData = useCallback(
     () => {
       dispatch(getTopTracksArtists({
@@ -73,7 +82,7 @@ const Tracks = props => {
   }, [getData])
 
   return (
-    <GridLayout>
+    <GridLayout id='tracks-grid'>
       {tracks.items && tracks.items.map((track, i) => {
         return <Vinil
           id={track.id}

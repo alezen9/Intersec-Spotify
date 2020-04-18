@@ -6,7 +6,7 @@ import { useFormik } from 'formik'
 import { fromPairs } from 'lodash'
 
 const Filters = props => {
-  const { open, onClose, filters, onFiltersChange } = props
+  const { open, onClose, filters, onFiltersChange, fullHeight = false } = props
   const formik = useFormik({
     initialValues: fromPairs(filters
       .filter(({ initialValue }) => ![null, undefined].includes(initialValue))
@@ -25,6 +25,7 @@ const Filters = props => {
       onClose={onClose}
       title='Filters'
       maxWidth='xs'
+      fullHeight={fullHeight}
       overflowY='hidden'
       content={<FiltersBuilder filters={filters} formik={formik} />}
       actions={<>

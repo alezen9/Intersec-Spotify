@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Grid } from '@material-ui/core'
 import { getTopTracksArtists } from '_redux/actions/musicActions'
 import Vinil from 'components/Vinil'
 import { TopSearch } from '_redux/Entities'
@@ -29,14 +28,6 @@ const Artists = props => {
 
   return (
     <GridLayout>
-      {/* {artists.items && artists.items.map((artist, i) => {
-        return <Vinil
-          id={`top-artist-${i}`}
-          key={`top-artist-${i}`}
-          name={artist.name}
-          backgrounds={artist.images}
-        />
-      })} */}
       {artists.items && artists.items.map((artist, i) =>
         <Vinil
           id={artist.id}
