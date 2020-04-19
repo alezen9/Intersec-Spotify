@@ -1,3 +1,5 @@
+import { find, get } from 'lodash'
+
 export const capitaliseFirstLetter = str => str.replace(/\b[a-zA-Z]/g, (match) => match.toUpperCase())
 
 export const decamelize = (str, separator) => {
@@ -41,3 +43,16 @@ export const lazyLoadImage = url => new Promise((resolve, reject) => {
   }
   downloadedImg.src = url
 })
+
+export const checkIsFetching = ({ state = {}, key }) => {
+  return key
+    ? get(state, `request.${key}.status`, null) === 'REQUEST_FETCHING'
+    : !!find(get(state, 'request', {}), ['status', 'REQUEST_FETCHING'])
+}
+
+export const asyncTimeout = async (milliseconds = 1000, withLog = false) => {
+  return new Promise((resolve, reject) => {
+    if (withLog) console.log(`Attendo ${milliseconds / 1000} secondi...`)
+    setTimeout(() => resolve(), milliseconds)
+  })
+}

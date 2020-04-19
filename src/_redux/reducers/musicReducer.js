@@ -7,7 +7,7 @@ const initState = {
   }
 }
 
-const userReducer = (state = initState, { type, payload }) => {
+const musicReducer = (state = initState, { type, payload }) => {
   switch (type) {
     case TOP_TRACKS_ARTISTS:
       return {
@@ -37,4 +37,4 @@ const userReducer = (state = initState, { type, payload }) => {
   }
 }
 
-export default userReducer
+export default musicReducer

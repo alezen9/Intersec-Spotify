@@ -30,8 +30,8 @@ const useStyles = makeStyles(theme => ({
     margin: `${theme.spacing(3)}px auto`
   },
   divider: {
-    margin: 'auto -16px',
-    background: 'rgba(255,255,255,.1)'
+    margin: '0',
+    background: 'rgba(255,255,255,.3)'
   }
 }))
 

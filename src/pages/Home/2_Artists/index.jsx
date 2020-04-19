@@ -7,12 +7,17 @@ import { TopSearch } from '_redux/Entities'
 import { get, maxBy, minBy } from 'lodash'
 import { AnimatedListWrapper } from '../helpers'
 import { useTheme, useMediaQuery } from '@material-ui/core'
+import { checkIsFetching } from 'utils/utils'
+import LoadingMask from 'components/LoadingMask'
 
 const GET_TOP_ARTISTS_KEY = 'GET_TOP_ARTISTS_KEY'
 
 const Artists = props => {
   const dispatch = useDispatch()
-  const { artists } = useSelector(state => state.music.top)
+  const { artists, isFetching } = useSelector(state => ({
+    artists: get(state, 'music.top.artists', []),
+    isFetching: checkIsFetching({ state, key: GET_TOP_ARTISTS_KEY })
+  }))
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
@@ -31,27 +36,29 @@ const Artists = props => {
   }, [getData])
 
   return (
-    <AnimatedListWrapper>
-      {artists.items && artists.items.map((artist, i) => {
-        return isSmallScreen
-          ? <ListItemVinil
-            id={artist.id}
-            key={`top-artist-${i}`}
-            name={artist.name}
-            artist={' '}
-            background={minBy(get(artist, 'images', []), 'width').url}
+    <LoadingMask isLoading={isFetching}>
+      <AnimatedListWrapper>
+        {artists.items && artists.items.map((artist, i) => {
+          return isSmallScreen
+            ? <ListItemVinil
+              id={artist.id}
+              key={`top-artist-${i}`}
+              name={artist.name}
+              artist={' '}
+              background={minBy(get(artist, 'images', []), 'width').url}
             // actions={<div>A</div>}
             // details={<ArtistDetail id={artist.id} />}
-          />
-          : <Vinil
-            id={artist.id}
-            key={`top-artist-${i}`}
-            name={artist.name}
-            background={maxBy(get(artist, 'images', []), 'width').url}
-            infoHeader={artist.name}
-          />
-      })}
-    </AnimatedListWrapper>
+            />
+            : <Vinil
+              id={artist.id}
+              key={`top-artist-${i}`}
+              name={artist.name}
+              background={maxBy(get(artist, 'images', []), 'width').url}
+              infoHeader={artist.name}
+            />
+        })}
+      </AnimatedListWrapper>
+    </LoadingMask>
   )
 }
 

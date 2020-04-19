@@ -23,7 +23,7 @@ const useStyles = makeStyles(({
 const _404 = () => {
   const classes = useStyles()
   return (
-    <Grid className={classes.container} container spacing={5} justify='center' alignContent='center'>
+    <Grid className={classes.container} container justify='center' alignContent='center'>
       <div className={classes.item}>
         <Typography variant='h1'>404</Typography>
         <div className={classes.verticalDivider} />

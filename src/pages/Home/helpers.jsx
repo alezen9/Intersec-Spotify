@@ -13,11 +13,7 @@ const useStyles = makeStyles(({
   },
   dividerClass: {
     width: '83%',
-    margin: '.5em 0 .5em 17%',
-    '@media (max-width:370px)': {
-      width: '75%',
-      margin: '.5em 0 .5em 25%'
-    }
+    margin: '.3em 0 .3em 17%'
   }
 }))
 

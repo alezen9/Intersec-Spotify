@@ -29,7 +29,8 @@ const CustomDialog = props => {
     actions,
     maxWidth = 'sm',
     fullHeight = true,
-    overflowY = 'auto'
+    overflowY = 'auto',
+    fullScreen
   } = props
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
@@ -42,7 +43,7 @@ const CustomDialog = props => {
       keepMounted={false}
       onClose={onClose}
       fullWidth
-      fullScreen={isSmallScreen}
+      fullScreen={fullScreen !== undefined ? fullScreen : isSmallScreen}
       maxWidth={maxWidth}
       aria-labelledby='details'
       aria-describedby='details'

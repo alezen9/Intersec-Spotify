@@ -26,6 +26,7 @@ const Filters = props => {
       title='Filters'
       maxWidth='xs'
       fullHeight={fullHeight}
+      fullScreen={false}
       overflowY='hidden'
       content={<FiltersBuilder filters={filters} formik={formik} />}
       actions={<>

@@ -11,7 +11,8 @@ const useStyles = makeStyles((theme) => ({
     height: 180
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    width: '100%'
   },
   paper: {
     margin: theme.spacing(1)
@@ -24,6 +25,12 @@ const useStyles = makeStyles((theme) => ({
     fill: theme.palette.common.white,
     stroke: theme.palette.divider,
     strokeWidth: 1
+  },
+  loader: {
+    position: 'absolute',
+    top: '70%',
+    left: '50%',
+    transform: 'translate(-50%, -70%)'
   }
 }))
 
@@ -54,7 +61,7 @@ const Lyrics = props => {
                 {lyrics.trim()}
               </Typography>
             </div>
-            : <div style={{ margin: 'auto' }}>
+            : <div className={classes.loader}>
               <CircularProgress />
             </div>}
         </Collapse>

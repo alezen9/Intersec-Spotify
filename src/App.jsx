@@ -7,7 +7,6 @@ import { Offline, Online } from 'react-detect-offline'
 import CloseIcon from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
 import OfflinePage from 'pages/Offline'
-import Menu from 'components/Menu'
 // pages
 import Login from 'pages/Login'
 // actions
@@ -18,11 +17,11 @@ import { snackbarSuccessMessages } from 'utils/snackbarMessages'
 import { isEmpty, get } from 'lodash'
 import { sections } from 'utils/routes'
 import _404 from 'pages/404'
-import ProgressBar from 'components/ProgressBar'
 import Zoom from '@material-ui/core/Zoom'
 import Fab from '@material-ui/core/Fab'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import { IconButton, useScrollTrigger } from '@material-ui/core'
+import Navbar from 'components/Navbar'
 
 const useStyles = makeStyles(theme => ({
   closeFab: {
@@ -30,10 +29,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: 25
   },
   content: {
+    marginTop: 'calc(64px + 1.5em)',
     padding: '1.5em',
     boxSizing: 'border-box',
     [theme.breakpoints.down('xs')]: {
-      padding: '1em'
+      padding: 0
     }
   }
 }))
@@ -118,10 +118,11 @@ const App = props => {
   return (
     <>
       <Online>
-        <ProgressBar />
+        {/* <ProgressBar /> */}
         {logged
           ? <>
-            <Menu />
+            {/* <Menu /> */}
+            <Navbar />
             <div className={content}>
               <SwitchRoutes />
             </div>

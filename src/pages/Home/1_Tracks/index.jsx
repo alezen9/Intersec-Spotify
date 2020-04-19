@@ -11,6 +11,9 @@ import PlayCircleFilledRoundedIcon from '@material-ui/icons/PlayCircleFilledRoun
 import TrackDetails from './Details'
 import { setActiveSection } from '_redux/actions/configActions'
 import { AnimatedListWrapper } from '../helpers'
+import LoadingMask from 'components/LoadingMask'
+import { checkIsFetching } from 'utils/utils'
+import { playerTrackStatus } from '_redux/actions/playerActions'
 
 const GET_TOP_TRACKS_KEY = 'GET_TOP_TRACKS_KEY'
 
@@ -57,7 +60,10 @@ const Actions = React.memo(props => {
 const Tracks = props => {
   const { filters } = props
   const dispatch = useDispatch()
-  const { tracks } = useSelector(state => state.music.top)
+  const { tracks, isFetching } = useSelector(state => ({
+    tracks: get(state, 'music.top.tracks', []),
+    isFetching: checkIsFetching({ state, key: GET_TOP_TRACKS_KEY })
+  }))
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
@@ -80,35 +86,50 @@ const Tracks = props => {
     [dispatch, filters]
   )
 
+  const setPlayingStatus = track => () => {
+    dispatch(playerTrackStatus({
+      id: track.id,
+      uri: track.uri,
+      previewUri: track.previewUri,
+      duration: track.duration,
+      title: track.name,
+      artist: get(track, 'artists[0].name', ''),
+      cover: minBy(get(track, 'album.images', []), 'width').url
+    }))
+  }
+
   useEffect(() => {
     getData()
   }, [getData])
 
   return (
-    <AnimatedListWrapper>
-      {tracks.items && tracks.items.map((track, i) => {
-        return isSmallScreen
-          ? <ListItemVinil
-            id={track.id}
-            key={`top-track-${i}`}
-            name={track.name}
-            artist={get(track, 'artists[0].name', '')}
-            background={minBy(get(track, 'album.images', []), 'width').url}
-            actions={<Actions url={track.previewUri} />}
-            details={<TrackDetails id={track.id} />}
-          />
-          : <Vinil
-            id={track.id}
-            key={`top-track-${i}`}
-            name={track.name}
-            background={maxBy(get(track, 'album.images', []), 'width').url}
-            infoHeader={get(track, 'artists[0].name', '')}
-            infoSubheader={track.name}
-            actions={<Actions url={track.previewUri} />}
-            details={<TrackDetails id={track.id} />}
-          />
-      })}
-    </AnimatedListWrapper>
+    <LoadingMask isLoading={isFetching}>
+      <AnimatedListWrapper>
+        {tracks.items && tracks.items.map((track, i) => {
+          return isSmallScreen
+            ? <ListItemVinil
+              id={track.id}
+              key={`top-track-${i}`}
+              name={track.name}
+              artist={get(track, 'artists[0].name', '')}
+              background={minBy(get(track, 'album.images', []), 'width').url}
+              playTrack={setPlayingStatus(track)}
+              details={<TrackDetails id={track.id} />}
+            />
+            : <Vinil
+              id={track.id}
+              key={`top-track-${i}`}
+              name={track.name}
+              playTrack={setPlayingStatus(track)}
+              background={maxBy(get(track, 'album.images', []), 'width').url}
+              infoHeader={get(track, 'artists[0].name', '')}
+              infoSubheader={track.name}
+              actions={<Actions url={track.previewUri} />}
+              details={<TrackDetails id={track.id} />}
+            />
+        })}
+      </AnimatedListWrapper>
+    </LoadingMask>
   )
 }
 

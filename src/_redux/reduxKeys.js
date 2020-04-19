@@ -25,5 +25,7 @@ export const ITEM_DETAILS = 'ITEM_DETAILS'
 export const LYRICS = 'LYRICS'
 // config
 export const SET_ACTIVE_SECTION = 'SET_ACTIVE_SECTION'
+// player
+export const TRACK_STATUS = 'TRACK_STATUS'
 // all
 export const RESET_ALL = 'RESET_ALL'
