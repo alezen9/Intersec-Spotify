@@ -55,9 +55,9 @@ const useStyles = makeStyles(theme => {
       cursor: 'pointer',
       gridTemplateColumns: '3fr 13fr 3fr',
       gridColumnGap: 10,
-      '&:hover': {
-        boxShadow: 'inset 0px 0px 30px rgba(255,255,255,.1)'
-      },
+      // '&:hover': {
+      // boxShadow: 'inset 0px 0px 30px rgba(255,255,255,.1)'
+      // },
       '&>*:first-child': {
         gridRow: '1 / 1',
         gridColumn: '1 / 1',

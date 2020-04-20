@@ -122,6 +122,8 @@ const Tracks = props => {
               name={track.name}
               playTrack={setPlayingStatus(track)}
               background={maxBy(get(track, 'album.images', []), 'width').url}
+              fullCover={maxBy(get(track, 'album.images', []), 'width').url}
+              smallCover={minBy(get(track, 'album.images', []), 'width').url}
               infoHeader={get(track, 'artists[0].name', '')}
               infoSubheader={track.name}
               actions={<Actions url={track.previewUri} />}

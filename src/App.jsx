@@ -17,10 +17,7 @@ import { snackbarSuccessMessages } from 'utils/snackbarMessages'
 import { isEmpty, get } from 'lodash'
 import { sections } from 'utils/routes'
 import _404 from 'pages/404'
-import Zoom from '@material-ui/core/Zoom'
-import Fab from '@material-ui/core/Fab'
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import { IconButton, useScrollTrigger } from '@material-ui/core'
+import { IconButton } from '@material-ui/core'
 import Navbar from 'components/Navbar'
 
 const useStyles = makeStyles(theme => ({
@@ -118,19 +115,17 @@ const App = props => {
   return (
     <>
       <Online>
-        {/* <ProgressBar /> */}
         {logged
           ? <>
-            {/* <Menu /> */}
             <Navbar />
             <div className={content}>
               <SwitchRoutes />
             </div>
-            <ScrollTop >
+            {/* <ScrollTop >
               <Fab color='secondary' size='small' aria-label='scroll back to top'>
                 <KeyboardArrowUpIcon />
               </Fab>
-            </ScrollTop>
+            </ScrollTop> */}
         </>
           : <Route key='route-404' path='*' component={Login} />}
       </Online>
@@ -141,29 +136,29 @@ const App = props => {
   )
 }
 
-const useStyles2 = makeStyles({
-  zoom: {
-    width: 40,
-    position: 'fixed',
-    bottom: '.5rem',
-    right: '.5rem'
-  }
-})
+// const useStyles2 = makeStyles({
+//   zoom: {
+//     width: 40,
+//     position: 'fixed',
+//     bottom: '.5rem',
+//     right: '.5rem'
+//   }
+// })
 
-const ScrollTop = props => {
-  const { children } = props
-  const { zoom } = useStyles2()
-  const trigger = useScrollTrigger()
-  const handleClick = e => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-  return (
-    <Zoom in={trigger}>
-      <div onClick={handleClick} role='presentation' className={zoom}>
-        {children}
-      </div>
-    </Zoom>
-  )
-}
+// const ScrollTop = props => {
+//   const { children } = props
+//   const { zoom } = useStyles2()
+//   const trigger = useScrollTrigger()
+//   const handleClick = e => {
+//     window.scrollTo({ top: 0, behavior: 'smooth' })
+//   }
+//   return (
+//     <Zoom in={trigger}>
+//       <div onClick={handleClick} role='presentation' className={zoom}>
+//         {children}
+//       </div>
+//     </Zoom>
+//   )
+// }
 
 export default withSnackbar(App)

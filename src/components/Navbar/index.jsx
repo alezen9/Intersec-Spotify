@@ -4,7 +4,7 @@ import { useHistory } from 'react-router'
 import { get } from 'lodash'
 // css
 import './Navbar.css'
-import { Avatar, Typography, Menu, MenuItem } from '@material-ui/core'
+import { Avatar, Typography, Menu, MenuItem, Tooltip, IconButton } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { sections } from 'utils/routes'
 import Spinner from 'components/Loaders/Spinner'
@@ -12,6 +12,8 @@ import { checkIsFetching, asyncTimeout } from 'utils/utils'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { logout } from '_redux/actions/userActions'
 import PersonRoundedIcon from '@material-ui/icons/PersonRounded'
+import MusicNoteIcon from '@material-ui/icons/MusicNote'
+import Player from 'components/Player'
 
 const LOGOUT_KEY = 'LOGOUT_KEY'
 
@@ -37,6 +39,7 @@ const Navbar = props => {
   const history = useHistory()
   const avatarRef = useRef(null)
   const [anchorEl, setAnchorEl] = useState(null)
+  const [openPlayer, setOpenPlayer] = useState(false)
 
   useLayoutEffect(() => {
     const setBodyPosition = async () => {
@@ -68,6 +71,8 @@ const Navbar = props => {
     dispatch(logout({ key: LOGOUT_KEY }))
   }
 
+  const handleClosePlayer = () => setOpenPlayer(false)
+
   return (
     <>
       <div className={open ? 'header menu-opened' : 'header'}>
@@ -85,6 +90,16 @@ const Navbar = props => {
           <Copyrights />
         </ul>
         <div className='right'>
+
+          <Tooltip
+            title='Player'
+            onClick={() => setOpenPlayer(true)}
+            arrow>
+            <IconButton color='primary' aria-label='Player'>
+              <MusicNoteIcon />
+            </IconButton>
+          </Tooltip>
+
           <Avatar
             ref={avatarRef}
             style={{ cursor: 'pointer' }}
@@ -112,6 +127,12 @@ const Navbar = props => {
           <Typography variant='body2'>Logout</Typography>
         </MenuItem>
       </Menu>
+      <Player
+        open={openPlayer}
+        onClose={handleClosePlayer}
+        title='Player'
+        content={<div>aleks</div>}
+      />
     </>
   )
 }

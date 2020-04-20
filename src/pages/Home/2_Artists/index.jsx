@@ -53,7 +53,8 @@ const Artists = props => {
               id={artist.id}
               key={`top-artist-${i}`}
               name={artist.name}
-              background={maxBy(get(artist, 'images', []), 'width').url}
+              fullCover={maxBy(get(artist, 'images', []), 'width').url}
+              smallCover={maxBy(get(artist, 'images', []), 'width').url}
               infoHeader={artist.name}
             />
         })}

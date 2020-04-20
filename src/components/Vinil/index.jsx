@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
 import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
 import CustomDialog from 'components/Dialog'
+import { useLazyLoad } from 'utils/customHooks'
 // import { EquilizerIcon } from 'assets/CustomIcons'
 
 const useStyles = makeStyles(theme => {
@@ -15,7 +16,8 @@ const useStyles = makeStyles(theme => {
       padding: padding,
       borderRadius: 5,
       '&:before': {
-        backgroundImage: ({ background }) => `url(${background})`,
+        backgroundImage: ({ large, small }) => `url(${large || small})`,
+        filter: ({ large }) => large ? 'none' : 'blur(15px)',
         backgroundSize: 'cover',
         position: 'absolute',
         content: '""',
@@ -23,7 +25,7 @@ const useStyles = makeStyles(theme => {
         height: '100%',
         top: 0,
         left: 0,
-        transition: 'all .1s ease-in'
+        transition: 'filter ease-in .1s'
       },
       '&:hover': {
         '&:before': {
@@ -82,9 +84,10 @@ const useStyles = makeStyles(theme => {
   }
 })
 
-const Vinil = props => {
-  const { id, name = 'Vinil', background, infoHeader, infoSubheader, actions, details } = props
-  const classes = useStyles({ background })
+const Vinil = React.memo(props => {
+  const { id, name = 'Vinil', fullCover, smallCover, infoHeader, infoSubheader, actions, details } = props
+  const largeImage = useLazyLoad(fullCover)
+  const classes = useStyles({ large: largeImage, small: smallCover })
   const [openDialog, setOpenDialog] = useState(false)
   return (
     <>
@@ -120,6 +123,6 @@ const Vinil = props => {
       />
     </>
   )
-}
+})
 
 export default React.memo(Vinil)

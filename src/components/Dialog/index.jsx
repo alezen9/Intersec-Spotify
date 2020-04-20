@@ -9,7 +9,7 @@ import { IconButton, Typography, Grid, makeStyles, useTheme, useMediaQuery } fro
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
 
 const Transition = React.forwardRef((props, ref) => {
-  return <Slide ref={ref} direction='up' {...props} />
+  return <Slide ref={ref} direction='left' {...props} />
 })
 
 const useStyles = makeStyles(theme => ({

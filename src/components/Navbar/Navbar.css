@@ -5,6 +5,7 @@
   left: .5em;
   height: 64px;
   width: calc(100% - 1em);
+  border-radius: 5px;
   background: #1A1B1F;
   box-shadow: 18px 18px 30px #0F1012, -18px -18px 30px #202427;
   overflow: hidden;
