@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
   },
   titleStyle: {
     color: 'white',
-    margin: `${theme.spacing(3)}px auto`
+    margin: `${theme.spacing(3)}px auto`,
+    padding: theme.spacing(1.5)
   },
   divider: {
     margin: '0',
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const TabPanel = ({ children, value, index, title, cardTitle, outercomponent, ...other }) => {
+const TabPanel = React.memo(({ children, value, index, title, cardTitle, outercomponent, ...other }) => {
   const { box, outercomponentBox, titleStyle, divider } = useStyles()
   return (
     <Typography
@@ -64,7 +65,7 @@ const TabPanel = ({ children, value, index, title, cardTitle, outercomponent, ..
       </Box>}
     </Typography>
   )
-}
+})
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -72,14 +73,14 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired
 }
 
-export const SingleTab = props => {
+export const SingleTab = React.memo(props => {
   const { value, index, title, cardTitle, component, outercomponent } = props
   return (
     <TabPanel value={value} index={index} title={title} outercomponent={outercomponent} cardTitle={cardTitle} >
       {component}
     </TabPanel>
   )
-}
+})
 
 SingleTab.propTypes = {
   value: PropTypes.number.isRequired,

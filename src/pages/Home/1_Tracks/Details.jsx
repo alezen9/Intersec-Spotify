@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTrackById } from '_redux/actions/musicActions'
-import { Grid, makeStyles, Divider, FormControlLabel, Switch } from '@material-ui/core'
+import { Grid, makeStyles, Divider, FormControlLabel, Switch, useTheme, useMediaQuery } from '@material-ui/core'
 import { get } from 'lodash'
 import { AvatarGridTypographyLabel } from 'components/GridTypographyLabel'
 import Lyrics from './Lyrics'
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     overflow: 'hidden',
     cursor: 'pointer',
-    height: '100%',
+    width: '100%',
     borderRadius: 5,
     paddingBottom: '100%',
     '&:before': {
@@ -36,6 +36,8 @@ const TrackDetails = props => {
   const dispatch = useDispatch()
   const details = useSelector(state => get(state, 'music.details', {}))
   const classes = useStyles({ background: get(details, 'album.images[0].url', '') })
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
   const [checked, setChecked] = useState(false)
 
@@ -45,10 +47,12 @@ const TrackDetails = props => {
 
   const getData = useCallback(
     () => {
-      dispatch(getTrackById({
-        key: GET_TRACK_KEY,
-        id
-      }))
+      if (id) {
+        dispatch(getTrackById({
+          key: GET_TRACK_KEY,
+          id
+        }))
+      }
     },
     [dispatch, id]
   )
@@ -58,12 +62,13 @@ const TrackDetails = props => {
   }, [getData])
 
   return (
-    <>
-      <Grid container spacing={3} style={{ margin: 0 }}>
-        <Grid item xs={4}>
+    <Grid container>
+
+      <Grid item container spacing={3} style={{ margin: 0 }}>
+        {!isSmallScreen && <Grid item xs={4}>
           <TiltCard className={classes.cover} />
-        </Grid>
-        <Grid item container spacing={0} xs={8}>
+        </Grid>}
+        <Grid item container spacing={1} xs={isSmallScreen ? 12 : 8}>
           {get(details, 'artists', []).map(artist =>
             <AvatarGridTypographyLabel
               key={artist.id}
@@ -78,14 +83,20 @@ const TrackDetails = props => {
             />)}
         </Grid>
       </Grid>
-      <Divider light />
-      <FormControlLabel
-        control={<Switch color='primary' checked={checked} onChange={handleChange} />}
-        label='Show lyrics'
-      />
-      <Lyrics showLyrics={checked} trackId={id} />
-    </>
+
+      <Grid item xs={12}>
+        <Divider light />
+      </Grid>
+
+      <Grid item xs={12}>
+        <FormControlLabel
+          control={<Switch color='primary' checked={checked} onChange={handleChange} />}
+          label='Show lyrics'
+        />
+        <Lyrics showLyrics={checked} trackId={id} />
+      </Grid>
+    </Grid>
   )
 }
 
-export default TrackDetails
+export default React.memo(TrackDetails)

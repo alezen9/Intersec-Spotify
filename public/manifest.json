@@ -1,16 +1,19 @@
 {
-  "short_name": "Intersec",
   "name": "Intersec",
-  "description": "An independent project to facilitate analysis and discovery for popular music platforms",
+  "short_name": "Intersec",
+  "description": "An independent project to facilitate analysis and discovery for popular music platforms.",
+  "lang": "en-EN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "orientation": "any",
+  "theme_color": "#009688",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "https://intersec-aleks.herokuapp.com/media/icons/intersec-logo.svg",
+      "sizes": "192x192",
+      "type": "mage/svg+xm"
     }
   ],
-  "start_url": "/",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#111"
+  "background_color": "#1A1B1F"
 }

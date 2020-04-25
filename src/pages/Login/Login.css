@@ -65,6 +65,7 @@
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
+    border-radius: 10px;
 }
 
 @media all and (max-width: 975px){

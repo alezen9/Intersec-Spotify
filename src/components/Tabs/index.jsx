@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 // MUI
 import { makeStyles } from '@material-ui/core/styles'
@@ -51,7 +51,12 @@ const IntersecTabs = React.forwardRef((props, ref) => {
   const [value, setValue] = useState(0)
   const isSmallScreen = useMediaQuery('(max-width: 850px)')
 
-  const handleChange = (e, newValue) => setValue(newValue)
+  const handleChange = useCallback(
+    (e, newValue) => {
+      setValue(newValue)
+    },
+    [setValue]
+  )
 
   return (
     <div ref={ref} className={wrapper}>
@@ -89,13 +94,13 @@ const IntersecTabs = React.forwardRef((props, ref) => {
   )
 })
 
-export default IntersecTabs
+export default React.memo(IntersecTabs)
 
 IntersecTabs.propTypes = {
   children: PropTypes.node.isRequired
 }
 
-export const IntersecTab = props => <div {...props} />
+export const IntersecTab = React.memo(props => <div {...props} />)
 
 IntersecTab.propTypes = {
   title: PropTypes.string.isRequired,

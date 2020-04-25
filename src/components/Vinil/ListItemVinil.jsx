@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
-import CustomDialog from 'components/Dialog'
 import { EquilizerIcon } from 'assets/CustomIcons'
+import { useLazyLoad } from 'utils/customHooks'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -28,10 +28,24 @@ const useStyles = makeStyles(theme => {
       }
     },
     image: {
-      backgroundImage: ({ background }) => `url(${background})`,
-      backgroundSize: 'cover',
+      position: 'relative',
+      overflow: 'hidden',
+      cursor: 'pointer',
+      height: '100%',
       paddingBottom: '100%',
-      borderRadius: 5
+      borderRadius: 5,
+      '&:before': {
+        backgroundImage: ({ large, small }) => `url(${large || small})`,
+        filter: ({ large }) => large ? 'none' : 'blur(15px)',
+        backgroundSize: 'cover',
+        position: 'absolute',
+        content: '""',
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+        transition: 'filter ease-in .1s'
+      }
     },
     actionClass: {
       display: 'flex',
@@ -55,9 +69,7 @@ const useStyles = makeStyles(theme => {
       cursor: 'pointer',
       gridTemplateColumns: '3fr 13fr 3fr',
       gridColumnGap: 10,
-      // '&:hover': {
-      // boxShadow: 'inset 0px 0px 30px rgba(255,255,255,.1)'
-      // },
+      overflow: 'hidden',
       '&>*:first-child': {
         gridRow: '1 / 1',
         gridColumn: '1 / 1',
@@ -80,9 +92,10 @@ const useStyles = makeStyles(theme => {
 })
 
 const ListItemVinil = props => {
-  const { id, name = '-', artist = '-', background, details, playTrack } = props
-  const { mainGrid, image, texts, actionClass, equilizer } = useStyles({ background })
-  const [openDialog, setOpenDialog] = useState(false)
+  const { id, name = '-', artist = '-', fullCover, smallCover, openDetails, playTrack } = props
+  const largeImage = useLazyLoad(fullCover)
+
+  const { mainGrid, image, texts, actionClass, equilizer } = useStyles({ large: largeImage, small: smallCover })
   return (
     <>
       <div id={id} className={mainGrid} >
@@ -98,19 +111,12 @@ const ListItemVinil = props => {
         <div className={actionClass}>
           <IconButton
             color='primary'
-            onClick={() => setOpenDialog(true)}
+            onClick={() => openDetails(true)}
             aria-label='Details'>
             <DetailsRoundedIcon />
           </IconButton>
         </div>
       </div>
-      <CustomDialog
-        title={name}
-        open={openDialog}
-        fullHeight={false}
-        onClose={() => setOpenDialog(false)}
-        content={details}
-      />
     </>
   )
 }

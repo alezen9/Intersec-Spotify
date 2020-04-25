@@ -98,6 +98,78 @@ const theme = createMuiTheme({
       color: typographyColor
     }
   },
+  shadow: {
+    position: 'relative',
+    '&:before': {
+      zIndex: -1,
+      position: 'absolute',
+      content: '""',
+      left: 10,
+      bottom: 25,
+      width: '50%',
+      top: '80%',
+      maxWidth: 300,
+      background: '#000',
+      boxShadow: '0 35px 20px #000',
+      transform: 'rotate(-8deg)'
+    },
+    '&:after': {
+      zIndex: -1,
+      position: 'absolute',
+      content: '""',
+      right: 10,
+      bottom: 25,
+      width: '50%',
+      top: '80%',
+      maxWidth: 300,
+      background: '#000',
+      boxShadow: '0 35px 20px #000',
+      transform: 'rotate(8deg)'
+    }
+  },
+  shadow2: {
+    position: 'relative',
+    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset',
+    '&:before': {
+      zIndex: -1,
+      position: 'absolute',
+      content: '""',
+      top: 0,
+      bottom: 0,
+      left: 10,
+      right: 10,
+      boxShadow: '0 0 20px rgba(0,0,0,0.8)',
+      borderRadius: '100px / 10px'
+    },
+    '&:after': {
+      zIndex: -1,
+      position: 'absolute',
+      content: '""',
+      top: 0,
+      bottom: 0,
+      right: 10,
+      boxShadow: '0 0 20px rgba(0,0,0,0.8)',
+      borderRadius: '100px / 10px',
+      transform: 'skew(8deg) rotate(3deg)'
+    }
+  },
+  shadow3: {
+    position: 'relative',
+    '&:before': {
+      zIndex: -1,
+      position: 'absolute',
+      content: '""',
+      top: '80%',
+      bottom: 15,
+      left: 'auto',
+      right: 10,
+      width: '50%',
+      maxWidth: 300,
+      background: '#000',
+      boxShadow: ' 0 15px 10px #000',
+      transform: 'rotate(3deg)'
+    }
+  },
   overrides: {
     MuiSnackbarContent: {
       root: {

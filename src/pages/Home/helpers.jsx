@@ -53,14 +53,16 @@ export const AnimatedListWrapper = React.memo(props => {
           initial='hidden'
           animate='visible'
         >
-          {children && children.map((child, i) => {
-            return <motion.li key={`animated-${i}`} variants={item} >
-              {i !== 0 && <Divider className={classes.dividerClass} light />}
-              <Grid item xs={12}>
-                {child}
-              </Grid>
-            </motion.li>
-          })}
+          {children && children.length
+            ? children.map((child, i) => {
+              return <motion.li key={`animated-${i}`} variants={item} >
+                {i !== 0 && <Divider className={classes.dividerClass} light />}
+                <Grid item xs={12}>
+                  {child}
+                </Grid>
+              </motion.li>
+            })
+            : <></>}
         </motion.ul>
       </Grid>
       : <GridLayout>

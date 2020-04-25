@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
 import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
-import CustomDialog from 'components/Dialog'
 import { useLazyLoad } from 'utils/customHooks'
 // import { EquilizerIcon } from 'assets/CustomIcons'
 
@@ -73,8 +72,9 @@ const useStyles = makeStyles(theme => {
     },
     actions: {
       position: 'absolute',
-      bottom: 0,
-      left: 0,
+      bottom: theme.spacing(),
+      left: theme.spacing(),
+      width: `calc(100% - ${theme.spacing(2)}px)`,
       boxSizing: 'border-box',
       display: 'flex',
       justifyContent: 'space-between',
@@ -85,10 +85,9 @@ const useStyles = makeStyles(theme => {
 })
 
 const Vinil = React.memo(props => {
-  const { id, name = 'Vinil', fullCover, smallCover, infoHeader, infoSubheader, actions, details } = props
+  const { id, fullCover, smallCover, infoHeader, infoSubheader, actions, openDetails } = props
   const largeImage = useLazyLoad(fullCover)
   const classes = useStyles({ large: largeImage, small: smallCover })
-  const [openDialog, setOpenDialog] = useState(false)
   return (
     <>
       <div id={id} className={classes.container} >
@@ -106,7 +105,7 @@ const Vinil = React.memo(props => {
           <Grid item style={{ marginLeft: 'auto' }}>
             <Tooltip
               title='Details'
-              onClick={() => setOpenDialog(true)}
+              onClick={openDetails}
               arrow>
               <IconButton color='primary' aria-label='Details'>
                 <DetailsRoundedIcon />
@@ -115,12 +114,6 @@ const Vinil = React.memo(props => {
           </Grid>
         </Grid>
       </div>
-      <CustomDialog
-        title={name}
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        content={details}
-      />
     </>
   )
 })

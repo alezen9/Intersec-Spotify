@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
     top: '70%',
     left: '50%',
     transform: 'translate(-50%, -70%)'
+  },
+  squareBrackets: {
+    fontWeight: 'bold'
   }
 }))
 
@@ -43,7 +46,7 @@ const Lyrics = props => {
   const lyrics = useSelector(state => get(state, 'music.details.lyrics', null))
 
   useEffect(() => {
-    if (showLyrics && !lyrics) {
+    if (showLyrics && !lyrics && trackId) {
       dispatch(getTrackLyrics({
         key: GET_LYRICS_KEY,
         id: trackId
@@ -51,13 +54,22 @@ const Lyrics = props => {
     }
   }, [dispatch, lyrics, showLyrics, trackId])
 
+  // const lyricsParsed = useMemo(() => {
+  //   if (lyrics) {
+  //     const s = '<p>' + lyrics.trim().split('[').join(`<span className=${classes.squareBrackets}>`).split(']').join('</span>') + '</p>'
+  //     const _html = stringToHTML(s)
+  //     console.log(Array.from(_html.childNodes))
+  //     return Array.from(_html.children)
+  //   } else return 'Lyrics not available'
+  // }, [lyrics, classes.squareBrackets])
+
   return (
     <div className={classes.root}>
       <div className={classes.container}>
         <Collapse in={showLyrics}>
           {lyrics
             ? <div className={classes.paper}>
-              <Typography style={{ whiteSpace: 'pre-wrap' }} variant='body1'>
+              <Typography style={{ whiteSpace: 'pre-wrap', opacity: 0.8 }} variant='body1'>
                 {lyrics.trim()}
               </Typography>
             </div>

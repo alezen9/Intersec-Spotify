@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react'
+import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Tooltip, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
 import { getTopTracksArtists } from '_redux/actions/musicActions'
@@ -14,6 +14,7 @@ import { AnimatedListWrapper } from '../helpers'
 import LoadingMask from 'components/LoadingMask'
 import { checkIsFetching } from 'utils/utils'
 import { playerTrackStatus } from '_redux/actions/playerActions'
+import CustomDialog from 'components/Dialog'
 
 const GET_TOP_TRACKS_KEY = 'GET_TOP_TRACKS_KEY'
 
@@ -66,6 +67,7 @@ const Tracks = props => {
   }))
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
+  const [details, setDetails] = useState(null)
 
   useEffect(() => {
     const target = document.querySelector('#tracks-grid')
@@ -86,53 +88,69 @@ const Tracks = props => {
     [dispatch, filters]
   )
 
-  const setPlayingStatus = track => () => {
-    dispatch(playerTrackStatus({
-      id: track.id,
-      uri: track.uri,
-      previewUri: track.previewUri,
-      duration: track.duration,
-      title: track.name,
-      artist: get(track, 'artists[0].name', ''),
-      cover: minBy(get(track, 'album.images', []), 'width').url
-    }))
-  }
+  const setPlayingStatus = useCallback(
+    track => () => {
+      dispatch(playerTrackStatus({
+        id: track.id,
+        uri: track.uri,
+        previewUri: track.previewUri,
+        duration: track.duration,
+        title: track.name,
+        artist: get(track, 'artists[0].name', ''),
+        cover: minBy(get(track, 'album.images', []), 'width').url
+      }))
+    },
+    [dispatch]
+  )
 
   useEffect(() => {
     getData()
   }, [getData])
 
+  const listProps = useMemo(() => tracks && tracks.items
+    ? tracks.items.map((track, i) => ({
+      id: track.id,
+      name: track.name,
+      key: `top-track-${i}`,
+      artist: get(track, 'artists[0].name', ''),
+      fullCover: maxBy(get(track, 'album.images', []), 'width').url,
+      smallCover: minBy(get(track, 'album.images', []), 'width').url,
+      playTrack: setPlayingStatus(track),
+      details: <TrackDetails id={track.id} />,
+      actions: <Actions url={track.previewUri} />,
+      infoHeader: get(track, 'artists[0].name', ''),
+      infoSubheader: track.name,
+      openDetails: () => setDetails({
+        name: track.name,
+        id: track.id,
+        fullHeight: !isSmallScreen
+      })
+    }))
+    : [], [tracks, isSmallScreen, setPlayingStatus])
+
   return (
-    <LoadingMask isLoading={isFetching}>
-      <AnimatedListWrapper>
-        {tracks.items && tracks.items.map((track, i) => {
-          return isSmallScreen
-            ? <ListItemVinil
-              id={track.id}
-              key={`top-track-${i}`}
-              name={track.name}
-              artist={get(track, 'artists[0].name', '')}
-              background={minBy(get(track, 'album.images', []), 'width').url}
-              playTrack={setPlayingStatus(track)}
-              details={<TrackDetails id={track.id} />}
-            />
-            : <Vinil
-              id={track.id}
-              key={`top-track-${i}`}
-              name={track.name}
-              playTrack={setPlayingStatus(track)}
-              background={maxBy(get(track, 'album.images', []), 'width').url}
-              fullCover={maxBy(get(track, 'album.images', []), 'width').url}
-              smallCover={minBy(get(track, 'album.images', []), 'width').url}
-              infoHeader={get(track, 'artists[0].name', '')}
-              infoSubheader={track.name}
-              actions={<Actions url={track.previewUri} />}
-              details={<TrackDetails id={track.id} />}
-            />
-        })}
-      </AnimatedListWrapper>
-    </LoadingMask>
+    <>
+      <LoadingMask isLoading={isFetching}>
+        <AnimatedListWrapper>
+          {listProps.map(p => <Item {...p} isSmallScreen={isSmallScreen} />)}
+        </AnimatedListWrapper>
+      </LoadingMask>
+      <CustomDialog
+        title={get(details, 'name', '')}
+        open={!!details}
+        fullHeight={get(details, 'fullHeight', '')}
+        onClose={() => setDetails(null)}
+        content={<TrackDetails id={get(details, 'id', null)} />}
+      />
+    </>
   )
 }
+
+const Item = React.memo(props => {
+  const { isSmallScreen, ...rest } = props
+  return isSmallScreen
+    ? <ListItemVinil {...rest} />
+    : <Vinil {...rest} />
+})
 
 export default React.memo(Tracks)

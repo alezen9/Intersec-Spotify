@@ -55,3 +55,31 @@ export const asyncTimeout = async (milliseconds = 1000, withLog = false) => {
     setTimeout(() => resolve(), milliseconds)
   })
 }
+
+const support = (function () {
+  if (!window.DOMParser) return false
+  const parser = new DOMParser()
+  try {
+    parser.parseFromString('x', 'text/html')
+  } catch (err) {
+    return false
+  }
+  return true
+})()
+
+/**
+ * Convert a template string into HTML DOM nodes
+ * @param  {String} str The template string
+ * @return {Node}       The template HTML
+ */
+export const stringToHTML = str => {
+  // If DOMParser is supported, use it
+  if (support) {
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(str, 'text/html')
+    return doc.body
+  }
+  const dom = document.createElement('div')
+  dom.innerHTML = str
+  return dom
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Route, Switch, useLocation, useHistory } from 'react-router-dom'
 import { withSnackbar } from 'notistack'
@@ -19,6 +19,7 @@ import { sections } from 'utils/routes'
 import _404 from 'pages/404'
 import { IconButton } from '@material-ui/core'
 import Navbar from 'components/Navbar'
+import Player from 'components/Player'
 
 const useStyles = makeStyles(theme => ({
   closeFab: {
@@ -29,6 +30,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: 'calc(64px + 1.5em)',
     padding: '1.5em',
     boxSizing: 'border-box',
+    width: '100%',
     [theme.breakpoints.down('xs')]: {
       padding: 0
     }
@@ -55,6 +57,7 @@ const App = props => {
   const history = useHistory()
   const request = useSelector(state => get(state, 'request', {}))
   const location = useLocation()
+  const [openPlayer, setOpenPlayer] = useState(false)
   const dispatch = useDispatch()
   const { logged } = useSelector(state => ({
     logged: get(state, 'user.logged', false)
@@ -112,12 +115,24 @@ const App = props => {
     }
   }, [request, dispatch, enqueueSnackbar, closeSnackbar, action])
 
+  const handleClosePlayer = useCallback(
+    () => {
+      setOpenPlayer(false)
+    },
+    [setOpenPlayer]
+  )
+
   return (
     <>
       <Online>
         {logged
           ? <>
             <Navbar />
+            <Player
+              open={openPlayer}
+              onClose={handleClosePlayer}
+              title='Player'
+            />
             <div className={content}>
               <SwitchRoutes />
             </div>
@@ -161,4 +176,4 @@ const App = props => {
 //   )
 // }
 
-export default withSnackbar(App)
+export default withSnackbar(React.memo(App))
