@@ -10,6 +10,7 @@ import SingleTab from './SingleTab'
 import { compact } from 'lodash'
 // theme
 import { backgroundColor } from 'theme'
+import SwipeableViews from 'react-swipeable-views'
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -55,14 +56,19 @@ const IntersecTabs = React.forwardRef((props, ref) => {
     (e, newValue) => {
       setValue(newValue)
     },
-    [setValue]
-  )
+    [setValue])
+
+  const handleChangeIndex = useCallback(
+    val => {
+      setValue(val)
+    },
+    [setValue])
 
   return (
     <div ref={ref} className={wrapper}>
       <AppBar className={appBar} position='static'>
         <Tabs
-          variant={isSmallScreen ? 'scrollable' : 'standard'}
+          variant={isSmallScreen ? 'fullWidth' : 'standard'}
           value={value}
           onChange={handleChange}
           aria-label='Tab Panel'
@@ -76,20 +82,25 @@ const IntersecTabs = React.forwardRef((props, ref) => {
               label={child.props.title}
               {...tabProps(i, { tab, tabSelected })}
             />
-          })
-          }
+          })}
         </Tabs>
       </AppBar>
-      {compact(children).map((child, i) =>
-        <SingleTab
-          key={`tabPanel-${i}`}
-          value={value}
-          index={i}
-          title={child.props.title}
-          cardTitle={child.props.cardTitle}
-          component={child.props.component}
-          outercomponent={child.props.outercomponent}
-        />)}
+      <SwipeableViews
+        axis='x'
+        index={value}
+        onChangeIndex={handleChangeIndex}
+      >
+        {compact(children).map((child, i) =>
+          <SingleTab
+            key={`tabPanel-${i}`}
+            value={value}
+            index={i}
+            title={child.props.title}
+            cardTitle={child.props.cardTitle}
+            component={child.props.component}
+            outercomponent={child.props.outercomponent}
+          />)}
+      </SwipeableViews>
     </div>
   )
 })

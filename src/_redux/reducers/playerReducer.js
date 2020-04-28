@@ -1,7 +1,6 @@
 import { TRACK_STATUS, RESET_ALL } from '../reduxKeys'
 
 const initState = {
-  duration: 0,
   isPlaying: false
 }
 

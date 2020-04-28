@@ -1,17 +1,18 @@
-import React, { useState, useCallback, useMemo } from 'react'
-import { useTheme, useMediaQuery, makeStyles } from '@material-ui/core'
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { useTheme, useMediaQuery, makeStyles, Typography } from '@material-ui/core'
 // import MobilePlayer from './Mobile'
 import DesktopPlayer from './Desktop'
 import { asyncTimeout } from 'utils/utils'
 import { useSelector } from 'react-redux'
-import { get, minBy, maxBy } from 'lodash'
+import { get, minBy, maxBy, isEmpty } from 'lodash'
 import { useLazyLoad } from 'utils/customHooks'
 import { Controls } from './helpers'
+import { teal } from '@material-ui/core/colors'
 
 const useStyles = makeStyles(theme => ({
   player: {
     position: 'fixed',
-    top: 'calc(100vh - 90px)',
+    bottom: -30,
     left: 0,
     width: '100vw',
     height: 120,
@@ -27,7 +28,6 @@ const useStyles = makeStyles(theme => ({
     backdropFilter: 'blur(50px)',
     overflow: 'hidden',
     background: 'rgba(26, 27, 31,.8)',
-    transition: 'all ease .2s',
     cursor: 'pointer'
   },
   cover: {
@@ -36,15 +36,18 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     borderRadius: 5,
     '&:before': {
+      backgroundColor: 'grey',
       backgroundImage: ({ small }) => `url("${small}")`,
       backgroundSize: 'cover',
       position: 'absolute',
       content: '""',
-      width: '100%',
-      height: '100%',
-      top: 0,
-      left: 0,
-      transition: 'all ease-in .4s'
+      width: '80%',
+      height: '80%',
+      top: '50%',
+      left: '50%',
+      borderRadius: 5,
+      transform: 'translate(-50%, -50%)',
+      transition: 'background-image ease-in .4s'
     }
   },
   info: {
@@ -56,25 +59,38 @@ const useStyles = makeStyles(theme => ({
     fontSize: '1.2em',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  progress: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: 3,
+    zIndex: 1,
+    transformOrigin: 'left',
+    borderRadius: 3,
+    width: '100%',
+    transform: 'scaleX(0)',
+    background: teal[500],
+    transition: 'transform .1s linear',
+    willChange: 'transform'
   }
 }))
-
-const randomIndex = Math.round(Math.random() * 20)
 
 const Player = props => {
   const [fullPlayer, setFullPlayer] = useState(false)
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [displayFull, setDisplayFull] = useState('none')
-  const track = useSelector(state => {
-    const topTracks = get(state, 'music.top.tracks.items', [])
-    const t = topTracks[randomIndex]
-    console.log(t)
-    return t
-  })
+  const [isPlaying, setIsPLaying] = useState(false)
+  const [time, setTime] = useState(0)
+  const audioRef = useRef()
+  const track = useSelector(state => get(state, 'player.current', {}))
   const { large, small } = useMemo(() => {
-    if (!track) return {}
+    if (isEmpty(track)) return {}
     else {
       return {
         large: maxBy(get(track, 'album.images', []), 'width').url,
@@ -82,8 +98,7 @@ const Player = props => {
       }
     }
   }, [track])
-  const { player, cover, info } = useStyles({ small })
-
+  const { player, cover, info, progress } = useStyles({ small })
   const fullCover = useLazyLoad(large)
 
   const handleOpenPlayer = useCallback(
@@ -104,23 +119,73 @@ const Player = props => {
       await asyncTimeout(100)
       if (!fullPlayer) setDisplayFull('none')
     },
-    [setFullPlayer, fullPlayer]
-  )
+    [setFullPlayer, fullPlayer])
+
+  const handlePlay = e => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    if (audioRef) {
+      const audio = audioRef.current
+      if (audio.paused) {
+        audio.play()
+        setIsPLaying(true)
+      } else {
+        audio.pause()
+        setIsPLaying(false)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!isEmpty(track)) setIsPLaying(true)
+    else setIsPLaying(false)
+  }, [track])
+
+  const handleChangeProgress = val => {
+    if (get(audioRef, 'current', null) && !isEmpty(track)) {
+      audioRef.current.currentTime = val
+    }
+  }
+
+  const onTimeUpdate = e => {
+    const current = e.target.currentTime
+    setTime(current / 30)
+  }
+
+  const onEnd = e => {
+    setIsPLaying(false)
+    setTime(0)
+  }
 
   const fullPlayerProps = {
     open: fullPlayer,
     handleClosePlayer,
     smallCover: small,
-    fullCover
+    fullCover,
+    handlePlay,
+    isPlaying,
+    timeScaled: time,
+    handleChangeProgress
   }
 
   return <>
+    <audio
+      ref={audioRef}
+      src={track.previewUri}
+      onEnded={onEnd}
+      onTimeUpdate={onTimeUpdate}
+      autoPlay
+      hidden />
     {!fullPlayer && <div onClick={handleOpenPlayer} className={player}>
+      <div className={progress} style={{ transform: `scaleX(${time})` }} />
       <div className={cover} />
       <div className={info}>
-          Not playing
+        <Typography variant='h5'>{get(track, 'artists[0].name', 'Not playing')}</Typography>
+        {get(track, 'name', null) && <Typography variant='caption'>{get(track, 'name', '-')}</Typography>}
       </div>
-      <Controls />
+      <Controls isPlaying={isPlaying} handlePlay={handlePlay} />
     </div>}
     <div style={{ display: displayFull }}>
       {isSmallScreen

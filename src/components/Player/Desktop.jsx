@@ -1,12 +1,10 @@
 import React, { useLayoutEffect, useCallback, useRef, useState } from 'react'
-import { makeStyles, IconButton, Tooltip, Grid } from '@material-ui/core'
+import { makeStyles, IconButton, Tooltip, Grid, useTheme, useMediaQuery } from '@material-ui/core'
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
-import MinimizeRoundedIcon from '@material-ui/icons/MinimizeRounded'
 import { asyncTimeout } from 'utils/utils'
 import FullscreenRoundedIcon from '@material-ui/icons/FullscreenRounded'
 import FullscreenExitRoundedIcon from '@material-ui/icons/FullscreenExitRounded'
-import { ProgressTrack } from './helpers'
-import { Controls } from './helpers'
+import { ProgressTrack, Controls } from './helpers'
 
 const useStyles = makeStyles(theme => {
   const size = '45vh'
@@ -50,9 +48,9 @@ const useStyles = makeStyles(theme => {
         backgroundSize: ({ isFullScreen }) => isFullScreen ? 100 : 1,
         transform: ({ isFullScreen }) => isFullScreen ? 'scale(10)' : 'none',
         transformOrigin: 'top left',
-        filter: ({ isFullScreen }) => isFullScreen ? 'blur(10px) brightness(.8)' : 'brightness(.8)',
+        filter: ({ isFullScreen, open }) => isFullScreen ? 'blur(10px) brightness(.8)' : 'brightness(.8)',
         opacity: 0.8,
-        willChange: 'contents, transform, filter'
+        willChange: 'background-size, transform, filter'
 
       }
     },
@@ -75,9 +73,8 @@ const useStyles = makeStyles(theme => {
       borderRadius: 5,
       zIndex: 100,
       '&:before': {
-        backgroundImage: ({ smallCover, fullCover }) => fullCover
-          ? `url("${fullCover}")`
-          : `url("${smallCover}")`,
+        backgroundColor: 'grey',
+        backgroundImage: ({ smallCover, fullCover }) => `url("${fullCover || smallCover}")`,
         backgroundSize: 'cover',
         position: 'absolute',
         content: '""',
@@ -87,7 +84,7 @@ const useStyles = makeStyles(theme => {
         left: 0,
         filter: ({ fullCover }) => fullCover ? 'unset' : 'blur(25px)',
         transition: 'all ease-in .3s',
-        willChange: 'contents, filter'
+        willChange: 'background-image, filter'
       }
     },
     tooltips: {
@@ -101,10 +98,12 @@ const useStyles = makeStyles(theme => {
 })
 
 const DesktopPlayer = props => {
-  const { open, handleClosePlayer, smallCover, fullCover } = props
+  const { open, handleClosePlayer, smallCover, fullCover, isPlaying, handlePlay, timeScaled, handleChangeProgress } = props
   const [isFullScreen, setIsFullScreen] = useState(false)
   const classes = useStyles({ open, smallCover, fullCover, isFullScreen })
   const ref = useRef(null)
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   useLayoutEffect(() => {
     const setBodyPosition = async () => {
@@ -116,27 +115,24 @@ const DesktopPlayer = props => {
 
   const handleFullScreen = useCallback(
     async () => {
-      if (ref) {
-        if (isFullScreen && document.fullscreen) {
-          await document.exitFullscreen()
-        } else {
-          await ref.current.requestFullscreen()
+      try {
+        if (ref) {
+          if (isFullScreen && document.fullscreen) {
+            await document.exitFullscreen()
+          } else {
+            await ref.current.requestFullscreen()
+          }
+          setIsFullScreen(state => !state)
         }
-        setIsFullScreen(state => !state)
+      } catch (error) {
+        console.log(error)
       }
     }, [isFullScreen])
 
   return (
     <div ref={ref} className={classes.main}>
       <Grid container spacing={3} className={classes.tooltips} justify='flex-end'>
-        <Grid item>
-          <Tooltip title='Minimize'>
-            <IconButton aria-label='minimize' onClick={handleClosePlayer}>
-              <MinimizeRoundedIcon />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid item>
+        {!isSmallScreen && <Grid item>
           <Tooltip title='Fullscreen'>
             <IconButton aria-label='fullscreen' onClick={handleFullScreen}>
               {isFullScreen
@@ -144,7 +140,7 @@ const DesktopPlayer = props => {
                 : <FullscreenRoundedIcon />}
             </IconButton>
           </Tooltip>
-        </Grid>
+        </Grid>}
         <Grid item>
           <Tooltip title='Close'>
             <IconButton aria-label='close' onClick={handleClosePlayer}>
@@ -155,8 +151,8 @@ const DesktopPlayer = props => {
       </Grid>
       <div className={classes.playerWrapper}>
         <div className={classes.cover} />
-        <ProgressTrack />
-        <Controls />
+        <ProgressTrack timeScaled={timeScaled} onChange={handleChangeProgress} />
+        <Controls isPlaying={isPlaying} handlePlay={handlePlay} />
       </div>
     </div>
   )

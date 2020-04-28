@@ -5,7 +5,6 @@ import { Grid, makeStyles, Divider, FormControlLabel, Switch, useTheme, useMedia
 import { get } from 'lodash'
 import { AvatarGridTypographyLabel } from 'components/GridTypographyLabel'
 import Lyrics from './Lyrics'
-import TiltCard from 'components/TiltCard'
 
 const GET_TRACK_KEY = 'GET_TRACK_KEY'
 
@@ -66,7 +65,7 @@ const TrackDetails = props => {
 
       <Grid item container spacing={3} style={{ margin: 0 }}>
         {!isSmallScreen && <Grid item xs={4}>
-          <TiltCard className={classes.cover} />
+          <div className={classes.cover} />
         </Grid>}
         <Grid item container spacing={1} xs={isSmallScreen ? 12 : 8}>
           {get(details, 'artists', []).map(artist =>

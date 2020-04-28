@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
-import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
+import TextFieldsRoundedIcon from '@material-ui/icons/TextFieldsRounded'
 import { useLazyLoad } from 'utils/customHooks'
 // import { EquilizerIcon } from 'assets/CustomIcons'
 
@@ -85,36 +85,34 @@ const useStyles = makeStyles(theme => {
 })
 
 const Vinil = React.memo(props => {
-  const { id, fullCover, smallCover, infoHeader, infoSubheader, actions, openDetails } = props
+  const { id, fullCover, smallCover, infoHeader, infoSubheader, actions, openDetails, type = 'track' } = props
   const largeImage = useLazyLoad(fullCover)
   const classes = useStyles({ large: largeImage, small: smallCover })
   return (
-    <>
-      <div id={id} className={classes.container} >
-        {/* INFO */}
-        <div className={classes.header}>
-          <div className={classes.equilizerContainer}>
-            <Typography variant='h6'>{infoHeader}</Typography>
-            {/* <EquilizerIcon color='primary' /> */}
-          </div>
-          {infoSubheader && <Typography variant='caption'>{infoSubheader}</Typography>}
+    <div id={id} className={classes.container} >
+      {/* INFO */}
+      <div className={classes.header}>
+        <div className={classes.equilizerContainer}>
+          <Typography variant='h6'>{infoHeader}</Typography>
+          {/* <EquilizerIcon color='primary' /> */}
         </div>
-        {/* ACTIONS */}
-        <Grid item container justify='flex-end' className={classes.actions}>
-          {actions || <></>}
-          <Grid item style={{ marginLeft: 'auto' }}>
-            <Tooltip
-              title='Details'
-              onClick={openDetails}
-              arrow>
-              <IconButton color='primary' aria-label='Details'>
-                <DetailsRoundedIcon />
-              </IconButton>
-            </Tooltip>
-          </Grid>
-        </Grid>
+        {infoSubheader && <Typography variant='caption'>{infoSubheader}</Typography>}
       </div>
-    </>
+      {/* ACTIONS */}
+      {type === 'track' && <Grid item container justify='flex-end' className={classes.actions}>
+        {actions || <></>}
+        <Grid item style={{ marginLeft: 'auto' }}>
+          <Tooltip
+            title='Lyrics'
+            onClick={openDetails}
+            arrow>
+            <IconButton color='primary' aria-label='Lyrics'>
+              <TextFieldsRoundedIcon />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      </Grid>}
+    </div>
   )
 })
 

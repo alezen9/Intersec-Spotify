@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { Slider, makeStyles, IconButton } from '@material-ui/core'
 import { typographyColor } from 'theme'
 import FastForwardRoundedIcon from '@material-ui/icons/FastForwardRounded'
 import FastRewindRoundedIcon from '@material-ui/icons/FastRewindRounded'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
+import PauseRoundedIcon from '@material-ui/icons/PauseRounded'
 
 const useStyles = makeStyles({
   progressWrapper: {
@@ -19,11 +20,17 @@ const useStyles = makeStyles({
     height: '.1em',
     opacity: 0.5
   },
+  thumb: {
+    borderRadius: 1,
+    width: 5,
+    marginLeft: -2.5
+  },
   buttons: {
     position: 'relative',
     height: '100%',
     width: '100%',
     display: 'flex',
+    paddingRight: '1em',
     justifyContent: 'space-evenly',
     alignItems: 'center'
   },
@@ -45,52 +52,59 @@ const getTime = s => {
   return `${_m}:${_s}`
 }
 
-const duration = 239
+const duration = 30
 
 const scale = dur => x => (x * dur).toFixed(2)
 
 export const ProgressTrack = props => {
+  const { withTime = true, timeScaled = 0, onChange } = props
   const classes = useStyles()
-  const [value, setValue] = useState(0)
 
   const handleChangeProgress = useCallback(
     (e, newValue) => {
-      setValue(newValue)
-    },
-    [setValue])
+      e.preventDefault()
+      e.stopPropagation()
+      onChange(newValue * duration)
+    }, [onChange])
 
   const handleChangeCommitted = useCallback(
     (e, newValue) => {
-      console.log(newValue)
-    },
-    [])
+      e.preventDefault()
+      e.stopPropagation()
+      onChange(newValue * duration)
+    }, [onChange])
 
   return (
     <div className={classes.progressWrapper}>
-      <span>{getTime(value * duration)}</span>
+      {withTime && <span>{getTime(timeScaled * duration)}</span>}
       <Slider
-        className={classes.progress}
+        classes={{
+          root: classes.progress,
+          thumb: classes.thumb
+        }}
         min={0}
         step={1 / duration}
         max={1}
         scale={scale(duration)}
-        value={value}
+        value={timeScaled}
         defaultValue={0}
         onChange={handleChangeProgress}
         onChangeCommitted={handleChangeCommitted}
         aria-labelledby='progress-track' />
-      <span>-{getTime(duration - (value * duration))}</span>
+      {withTime && <span>-{getTime(duration - (timeScaled * duration))}</span>}
     </div>
   )
 }
 
-export const Controls = props => {
-  const { handlePlay = () => console.log('play') } = props
+export const Controls = React.memo(props => {
+  const { isPlaying, handlePlay } = props
   const classes = useStyles()
+
   return <div className={classes.buttons}>
     <IconButton
       onClick={handlePlay}
       className={classes.iconButton}
+      disabled
       aria-label='prev'>
       <FastRewindRoundedIcon />
     </IconButton>
@@ -98,13 +112,16 @@ export const Controls = props => {
       onClick={handlePlay}
       className={classes.iconButton}
       aria-label='play'>
-      <PlayArrowIcon />
+      {!isPlaying
+        ? <PlayArrowIcon />
+        : <PauseRoundedIcon />}
     </IconButton>
     <IconButton
       onClick={handlePlay}
       className={classes.iconButton}
+      disabled
       aria-label='next'>
       <FastForwardRoundedIcon />
     </IconButton>
   </div>
-}
+})

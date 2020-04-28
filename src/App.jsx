@@ -5,7 +5,6 @@ import { withSnackbar } from 'notistack'
 import { Offline, Online } from 'react-detect-offline'
 // components
 import CloseIcon from '@material-ui/icons/Close'
-import { makeStyles } from '@material-ui/core/styles'
 import OfflinePage from 'pages/Offline'
 // pages
 import Login from 'pages/Login'
@@ -17,7 +16,7 @@ import { snackbarSuccessMessages } from 'utils/snackbarMessages'
 import { isEmpty, get } from 'lodash'
 import { sections } from 'utils/routes'
 import _404 from 'pages/404'
-import { IconButton } from '@material-ui/core'
+import { IconButton, makeStyles } from '@material-ui/core'
 import Navbar from 'components/Navbar'
 import Player from 'components/Player'
 
@@ -27,12 +26,15 @@ const useStyles = makeStyles(theme => ({
     fontSize: 25
   },
   content: {
+    position: 'relative',
     marginTop: 'calc(64px + 1.5em)',
     padding: '1.5em',
     boxSizing: 'border-box',
     width: '100%',
+    overflow: 'hidden',
+    minHeight: 'calc(100vh - 64px - 1.5em)',
     [theme.breakpoints.down('xs')]: {
-      padding: 0
+      padding: '0 0 50px 0'
     }
   }
 }))
@@ -115,7 +117,7 @@ const App = props => {
     }
   }, [request, dispatch, enqueueSnackbar, closeSnackbar, action])
 
-  const handleClosePlayer = useCallback(
+  const minimizePlayer = useCallback(
     () => {
       setOpenPlayer(false)
     },
@@ -130,17 +132,12 @@ const App = props => {
             <Navbar />
             <Player
               open={openPlayer}
-              onClose={handleClosePlayer}
+              onClose={minimizePlayer}
               title='Player'
             />
             <div className={content}>
               <SwitchRoutes />
             </div>
-            {/* <ScrollTop >
-              <Fab color='secondary' size='small' aria-label='scroll back to top'>
-                <KeyboardArrowUpIcon />
-              </Fab>
-            </ScrollTop> */}
         </>
           : <Route key='route-404' path='*' component={Login} />}
       </Online>
@@ -150,30 +147,5 @@ const App = props => {
     </>
   )
 }
-
-// const useStyles2 = makeStyles({
-//   zoom: {
-//     width: 40,
-//     position: 'fixed',
-//     bottom: '.5rem',
-//     right: '.5rem'
-//   }
-// })
-
-// const ScrollTop = props => {
-//   const { children } = props
-//   const { zoom } = useStyles2()
-//   const trigger = useScrollTrigger()
-//   const handleClick = e => {
-//     window.scrollTo({ top: 0, behavior: 'smooth' })
-//   }
-//   return (
-//     <Zoom in={trigger}>
-//       <div onClick={handleClick} role='presentation' className={zoom}>
-//         {children}
-//       </div>
-//     </Zoom>
-//   )
-// }
 
 export default withSnackbar(React.memo(App))

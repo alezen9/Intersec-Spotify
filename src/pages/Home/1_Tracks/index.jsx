@@ -19,7 +19,7 @@ import CustomDialog from 'components/Dialog'
 const GET_TOP_TRACKS_KEY = 'GET_TOP_TRACKS_KEY'
 
 const Actions = React.memo(props => {
-  const { url } = props
+  const { url, playTrack } = props
   const audioRef = useRef(null)
   const [isPlaying, setIsPLaying] = useState(false)
 
@@ -40,7 +40,7 @@ const Actions = React.memo(props => {
       <Grid item>
         <Tooltip
           title='Play'
-          onClick={playThis}
+          onClick={playTrack}
           arrow>
           <IconButton color='primary' aria-label='Play'>
             {!isPlaying
@@ -90,15 +90,7 @@ const Tracks = props => {
 
   const setPlayingStatus = useCallback(
     track => () => {
-      dispatch(playerTrackStatus({
-        id: track.id,
-        uri: track.uri,
-        previewUri: track.previewUri,
-        duration: track.duration,
-        title: track.name,
-        artist: get(track, 'artists[0].name', ''),
-        cover: minBy(get(track, 'album.images', []), 'width').url
-      }))
+      dispatch(playerTrackStatus(track))
     },
     [dispatch]
   )
@@ -117,7 +109,8 @@ const Tracks = props => {
       smallCover: minBy(get(track, 'album.images', []), 'width').url,
       playTrack: setPlayingStatus(track),
       details: <TrackDetails id={track.id} />,
-      actions: <Actions url={track.previewUri} />,
+      isPlayable: !!track.previewUri,
+      actions: <Actions url={track.previewUri} playTrack={setPlayingStatus(track)} />,
       infoHeader: get(track, 'artists[0].name', ''),
       infoSubheader: track.name,
       openDetails: () => setDetails({

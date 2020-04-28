@@ -42,10 +42,11 @@ const Artists = props => {
       id: artist.id,
       key: `top-artist-${i}`,
       name: artist.name,
-      artist: ' ',
+      artist: undefined,
       fullCover: maxBy(get(artist, 'images', []), 'width').url,
       smallCover: minBy(get(artist, 'images', []), 'width').url,
       infoHeader: artist.name,
+      type: 'artist',
       openDetails: () => setDetails({
         name: artist.name,
         id: artist.id,

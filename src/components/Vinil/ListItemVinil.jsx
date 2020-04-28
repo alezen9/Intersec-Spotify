@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
-import DetailsRoundedIcon from '@material-ui/icons/DetailsRounded'
+import TextFieldsRoundedIcon from '@material-ui/icons/TextFieldsRounded'
 import { EquilizerIcon } from 'assets/CustomIcons'
 import { useLazyLoad } from 'utils/customHooks'
 
@@ -92,29 +92,29 @@ const useStyles = makeStyles(theme => {
 })
 
 const ListItemVinil = props => {
-  const { id, name = '-', artist = '-', fullCover, smallCover, openDetails, playTrack } = props
+  const { id, name = '-', artist = '-', fullCover, smallCover, openDetails, playTrack, isPlayable, type = 'track' } = props
   const largeImage = useLazyLoad(fullCover)
 
   const { mainGrid, image, texts, actionClass, equilizer } = useStyles({ large: largeImage, small: smallCover })
   return (
     <>
       <div id={id} className={mainGrid} >
-        <div className={image} onClick={playTrack}>
+        <div className={image} {...isPlayable && { onClick: playTrack }}>
           {false && <div className={equilizer}>
             <EquilizerIcon color='primary' />
           </div>}
         </div>
-        <div className={texts} onClick={playTrack}>
+        <div className={texts} {...isPlayable && { onClick: playTrack }}>
           <Typography variant='h4'>{name}</Typography>
           <Typography variant='caption'>{artist}</Typography>
         </div>
         <div className={actionClass}>
-          <IconButton
+          {type === 'track' && <IconButton
             color='primary'
             onClick={() => openDetails(true)}
-            aria-label='Details'>
-            <DetailsRoundedIcon />
-          </IconButton>
+            aria-label='Lyrics'>
+            <TextFieldsRoundedIcon />
+          </IconButton>}
         </div>
       </div>
     </>
