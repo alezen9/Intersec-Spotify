@@ -1,4 +1,29 @@
 import { find, get } from 'lodash'
+import FastAverageColor from 'fast-average-color'
+
+export const extractColor = async (src) => {
+  const fac = new FastAverageColor()
+  try {
+    const img = await loadImage(src)
+    const res = await fac.getColorAsync(img)
+    console.log(res, img)
+    fac.destroy()
+    return Promise.resolve(res.rgba)
+  } catch (error) {
+    console.log(error)
+    fac.destroy()
+    return Promise.resolve(undefined)
+  }
+}
+
+export const loadImage = url => new Promise((resolve, reject) => {
+  const downloadedImg = new Image()
+  downloadedImg.crossOrigin = 'Anonymous'
+  downloadedImg.onload = () => {
+    return resolve(downloadedImg)
+  }
+  downloadedImg.src = url
+})
 
 export const capitaliseFirstLetter = str => str.replace(/\b[a-zA-Z]/g, (match) => match.toUpperCase())
 

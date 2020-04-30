@@ -103,7 +103,7 @@ const App = props => {
             preventDuplicate: true,
             persist: false
           })
-          dispatch(requestResetByKey(key))
+          // dispatch(requestResetByKey(key))
         }
         if (status === 'REQUEST_SUCCESS' && snackbarSuccessMessages[key]) {
           const message = snackbarSuccessMessages[key]
@@ -111,7 +111,7 @@ const App = props => {
             variant: 'success',
             action
           })
-          dispatch(requestResetByKey(key))
+          // dispatch(requestResetByKey(key))
         }
       })
     }

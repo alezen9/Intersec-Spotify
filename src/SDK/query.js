@@ -77,7 +77,15 @@ export const _getTrackLyrics = input => {
     query: `
     query {
       getTrackById(id: "${id}") {
-        lyrics
+        lyrics {
+          accuracy {
+            title,
+            artist,
+            overall
+          },
+          genius,
+          text
+        }
       }
     }`
   }

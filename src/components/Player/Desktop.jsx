@@ -1,10 +1,11 @@
-import React, { useLayoutEffect, useCallback, useRef, useState } from 'react'
+import React, { useLayoutEffect, useCallback, useRef, useState, useEffect } from 'react'
 import { makeStyles, IconButton, Tooltip, Grid, useTheme, useMediaQuery } from '@material-ui/core'
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
 import { asyncTimeout } from 'utils/utils'
 import FullscreenRoundedIcon from '@material-ui/icons/FullscreenRounded'
 import FullscreenExitRoundedIcon from '@material-ui/icons/FullscreenExitRounded'
 import { ProgressTrack, Controls } from './helpers'
+import { useExtractColor } from 'utils/customHooks'
 
 const useStyles = makeStyles(theme => {
   const size = '45vh'
@@ -44,8 +45,13 @@ const useStyles = makeStyles(theme => {
         zIndex: 0,
         width: '100%',
         height: '100%',
-        backgroundImage: ({ smallCover }) => `url("${smallCover}")`,
-        backgroundSize: ({ isFullScreen }) => isFullScreen ? 100 : 1,
+        backgroundImage: ({ smallCover, dominantColor, isFullScreen }) => isFullScreen
+          ? `url("${smallCover}")`
+          : dominantColor
+            ? 'none'
+            : `url("${smallCover}")`,
+        backgroundColor: ({ dominantColor }) => dominantColor || 'unset',
+        backgroundSize: ({ isFullScreen, dominantColor }) => isFullScreen ? 100 : dominantColor ? 0 : 1,
         transform: ({ isFullScreen }) => isFullScreen ? 'scale(10)' : 'none',
         transformOrigin: 'top left',
         filter: ({ isFullScreen, open }) => isFullScreen ? 'blur(10px) brightness(.8)' : 'brightness(.8)',
@@ -99,11 +105,16 @@ const useStyles = makeStyles(theme => {
 
 const DesktopPlayer = props => {
   const { open, handleClosePlayer, smallCover, fullCover, isPlaying, handlePlay, timeScaled, handleChangeProgress } = props
+  const dominantColor = useExtractColor(smallCover)
   const [isFullScreen, setIsFullScreen] = useState(false)
-  const classes = useStyles({ open, smallCover, fullCover, isFullScreen })
+  const classes = useStyles({ open, smallCover, fullCover, isFullScreen, dominantColor })
   const ref = useRef(null)
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+
+  useEffect(() => {
+    console.log(dominantColor)
+  }, [dominantColor])
 
   useLayoutEffect(() => {
     const setBodyPosition = async () => {

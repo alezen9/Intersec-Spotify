@@ -3,6 +3,7 @@ import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import TextFieldsRoundedIcon from '@material-ui/icons/TextFieldsRounded'
 import { EquilizerIcon } from 'assets/CustomIcons'
 import { useLazyLoad } from 'utils/customHooks'
+import { teal } from '@material-ui/core/colors'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -95,7 +96,7 @@ const ListItemVinil = props => {
   const { id, name = '-', artist = '-', fullCover, smallCover, openDetails, playTrack, isPlayable, type = 'track' } = props
   const largeImage = useLazyLoad(fullCover)
 
-  const { mainGrid, image, texts, actionClass, equilizer } = useStyles({ large: largeImage, small: smallCover })
+  const { mainGrid, image, texts, actionClass, equilizer } = useStyles({ large: largeImage, small: smallCover, isPlayable })
   return (
     <>
       <div id={id} className={mainGrid} >

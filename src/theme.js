@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import { red, teal, grey } from '@material-ui/core/colors'
+import { red, teal, grey, yellow } from '@material-ui/core/colors'
 
 export const typographyColor = grey[50]
 export const backgroundColor = '#1A1B1F'
@@ -22,7 +22,13 @@ const theme = createMuiTheme({
   palette: {
     primary: getPaletteShades(teal),
     secondary: getPaletteShades(grey),
-    error: getPaletteShades(red, grey[50])
+    error: getPaletteShades(red, grey[50]),
+    genius: {
+      light: yellow[300],
+      main: '#ffff64',
+      dark: yellow[400],
+      contrastText: grey[900]
+    }
   },
   typography: {
     fontFamily: "'Poppins', sans-serif",

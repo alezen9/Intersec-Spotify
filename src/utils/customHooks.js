@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useMemo } from 'react'
-import { lazyLoadImage } from 'utils/utils'
+import { lazyLoadImage, extractColor } from 'utils/utils'
 
 export const usePrevious = value => {
   const ref = useRef()
@@ -45,6 +45,25 @@ export const useLazyLoad = image => {
       if (isMounted) setState(res)
     }
     load()
+    return () => {
+      isMounted = false
+    }
+  }, [_img])
+  return state
+}
+
+export const useExtractColor = src => {
+  const _img = useMemo(() => src || undefined, [src])
+  const [state, setState] = useState(undefined)
+  useEffect(() => {
+    let isMounted = true
+    const getColor = async () => {
+      if (_img) {
+        const res = await extractColor(_img)
+        if (isMounted) setState(res)
+      }
+    }
+    getColor()
     return () => {
       isMounted = false
     }

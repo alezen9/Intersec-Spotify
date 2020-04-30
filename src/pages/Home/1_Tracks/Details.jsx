@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTrackById } from '_redux/actions/musicActions'
 import { Grid, makeStyles, Divider, FormControlLabel, Switch, useTheme, useMediaQuery } from '@material-ui/core'
-import { get } from 'lodash'
+import { get, minBy } from 'lodash'
 import { AvatarGridTypographyLabel } from 'components/GridTypographyLabel'
 import Lyrics from './Lyrics'
 
@@ -34,7 +34,7 @@ const TrackDetails = props => {
   const { id } = props
   const dispatch = useDispatch()
   const details = useSelector(state => get(state, 'music.details', {}))
-  const classes = useStyles({ background: get(details, 'album.images[0].url', '') })
+  const classes = useStyles({ background: get(minBy(get(details, 'album.images', []), 'width'), 'url', null) })
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
@@ -74,7 +74,7 @@ const TrackDetails = props => {
               xs={12}
               avatar={{
                 alt: artist.name,
-                src: get(artist, 'images[0].url', '')
+                src: get(minBy(get(artist, 'images', []), 'width'), 'url', null)
               }}
               value={artist.name}
               label='Artist'

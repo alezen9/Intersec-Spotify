@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
     width: '100vw',
     height: 120,
     padding: 10,
-    borderRadius: 5,
     display: 'grid',
     flexDirection: 'column',
     gridTemplateColumns: '70px 10fr 4fr',
@@ -75,7 +74,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     transform: 'scaleX(0)',
     background: teal[500],
-    transition: 'transform .1s linear',
+    transition: 'transform .2s linear',
     willChange: 'transform'
   }
 }))
