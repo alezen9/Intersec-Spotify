@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { get } from 'lodash'
 const keys = require('keys')
-console.log(keys.backend_url)
 
 // SDK
 class IntersecServer {

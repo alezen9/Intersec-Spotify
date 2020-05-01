@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useTheme, useMediaQuery, makeStyles, Typography } from '@material-ui/core'
-// import MobilePlayer from './Mobile'
+import MobilePlayer from './Mobile'
 import DesktopPlayer from './Desktop'
 import { asyncTimeout } from 'utils/utils'
 import { useSelector, useDispatch } from 'react-redux'
@@ -227,7 +227,7 @@ const Player = props => {
     </div>}
     <div style={{ display: displayFull }}>
       {isSmallScreen
-        ? <DesktopPlayer {...props} {...fullPlayerProps} />
+        ? <MobilePlayer {...props} {...fullPlayerProps} />
         : <DesktopPlayer {...props} {...fullPlayerProps} />}
     </div>
       </>

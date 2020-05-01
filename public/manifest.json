@@ -10,9 +10,19 @@
   "theme_color": "#009688",
   "icons": [
     {
-      "src": "https://intersec-aleks.herokuapp.com/media/icons/intersec-logo.svg",
+      "src": "/media/icons/intersec-logox144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/media/icons/intersec-logo.png",
       "sizes": "192x192",
-      "type": "mage/svg+xm"
+      "type": "image/png"
+    },
+    {
+      "src": "/media/icons/intersec-logox512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
   "background_color": "#1A1B1F"

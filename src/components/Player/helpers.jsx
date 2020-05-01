@@ -1,10 +1,15 @@
-import React, { useCallback } from 'react'
-import { Slider, makeStyles, IconButton, Grid, useTheme, useMediaQuery } from '@material-ui/core'
+import React, { useCallback, useEffect } from 'react'
+import { Slider, makeStyles, IconButton, Grid, useTheme, useMediaQuery, Typography } from '@material-ui/core'
 import { typographyColor } from 'theme'
 import SkipNextRoundedIcon from '@material-ui/icons/SkipNextRounded'
 import SkipPreviousRoundedIcon from '@material-ui/icons/SkipPreviousRounded'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseRoundedIcon from '@material-ui/icons/PauseRounded'
+import { useDispatch, useSelector } from 'react-redux'
+import { get } from 'lodash'
+import { requestResetByKey } from '_redux/actions/requestActions'
+import { getTrackLyrics } from '_redux/actions/musicActions'
+import Spinner from 'components/Loaders/Spinner'
 
 const useStyles = makeStyles(theme => ({
   progressWrapper: {
@@ -13,28 +18,58 @@ const useStyles = makeStyles(theme => ({
     color: typographyColor
   },
   progress: {
-    width: '90%',
+    width: '100%',
     height: '.1em',
     opacity: 0.5,
-    display: 'flex'
+    display: 'flex',
+    position: 'relative'
   },
-  thumb: {
-    borderRadius: 1,
-    width: 5,
-    marginLeft: -2.5
+  rail: {
+    height: 3,
+    backgroundColor: typographyColor
+  },
+  track: {
+    height: 3
   },
   buttons: {
     position: 'relative',
     height: '100%',
     width: '100%',
     display: 'flex',
-    paddingRight: '1em',
     justifyContent: 'space-evenly',
     alignItems: 'center'
   },
   iconButton: {
     color: 'white',
     fontSize: '2em'
+  },
+  lyrics: {
+    width: ({ open }) => open ? '60vh' : 0,
+    fontSize: '1.4em',
+    fontWeight: 'bold',
+    color: 'rgba(255,255,255,.5)',
+    height: '80vh',
+    overflowY: 'auto',
+    whiteSpace: 'pre-line',
+    paddingBottom: '3em',
+    maskImage: '-webkit-gradient(linear,left 85%,left bottom,from(black),to(rgba(0,0,0,0)))',
+    transform: ({ open }) => open
+      ? 'scale(1)'
+      : 'scale(0)',
+    willChange: 'transform, width',
+    transition: 'transform .3s ease',
+    '&::-webkit-scrollbar': {
+      display: 'none'
+    }
+  },
+  spinner: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '3em'
   }
 }))
 
@@ -55,7 +90,7 @@ const duration = 30
 const scale = dur => x => (x * dur).toFixed(2)
 
 export const ProgressTrack = props => {
-  const { withTime = true, timeScaled = 0, onChange, play, pause } = props
+  const { timeScaled = 0, onChange, play, pause } = props
   const classes = useStyles()
 
   const handleChangeProgress = useCallback(
@@ -75,14 +110,12 @@ export const ProgressTrack = props => {
 
   return (
     <Grid spacing={0} container justify='space-between' alignItems='center' className={classes.progressWrapper}>
-      {withTime && <Grid item xs={2}>
-        <span>{getTime(timeScaled * duration)}</span>
-      </Grid>}
-      <Grid item xs={withTime ? 8 : 12}>
+      <Grid item xs={12}>
         <Slider
           classes={{
             root: classes.progress,
-            thumb: classes.thumb
+            rail: classes.rail,
+            track: classes.track
           }}
           min={0}
           step={1 / duration}
@@ -94,9 +127,14 @@ export const ProgressTrack = props => {
           onChangeCommitted={handleChangeCommitted}
           aria-labelledby='progress-track' />
       </Grid>
-      {withTime && <Grid item xs={2}>
-        <span>-{getTime(duration - (timeScaled * duration))}</span>
-      </Grid>}
+      <Grid container item xs={12} spacing={0} justify='space-between'>
+        <Grid item xs={6}>
+          <span>{getTime(timeScaled * duration)}</span>
+        </Grid>
+        <Grid item xs={6} align='right'>
+          <span>-{getTime(duration - (timeScaled * duration))}</span>
+        </Grid>
+      </Grid>
     </Grid>
   )
 }
@@ -131,4 +169,47 @@ export const Controls = React.memo(props => {
       <SkipNextRoundedIcon />
     </IconButton>}
   </div>
+})
+
+const GET_LYRICS_KEY = 'GET_LYRICS_KEY'
+
+export const Lyrics = React.memo(props => {
+  const { open, id, isPlayerOpen } = props
+  const classes = useStyles({ open })
+  const dispatch = useDispatch()
+  const { lyrics, requestLyrics } = useSelector(state => {
+    return {
+      lyrics: get(state, `music.details.${id}.lyrics`, null),
+      requestLyrics: get(state, `request.${GET_LYRICS_KEY}`)
+    }
+  })
+
+  useEffect(() => {
+    return () => {
+      dispatch(requestResetByKey(GET_LYRICS_KEY))
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    if (open && isPlayerOpen && !lyrics && id) {
+      dispatch(getTrackLyrics({
+        key: GET_LYRICS_KEY,
+        id: id
+      }))
+    }
+  }, [dispatch, lyrics, open, isPlayerOpen, id])
+
+  return isPlayerOpen
+    ? <div className={classes.lyrics}>
+      {get(requestLyrics, 'status', null) === 'REQUEST_FAILURE'
+        ? <Typography style={{ whiteSpace: 'pre-wrap', opacity: 0.8 }} variant='body1'>
+              OOps, couldn't find any lyrics! :/
+        </Typography>
+        : lyrics
+          ? lyrics.text.trim()
+          : <div className={classes.spinner}>
+            <Spinner />
+          </div>}
+    </div>
+    : <></>
 })

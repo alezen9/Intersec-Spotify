@@ -4,8 +4,12 @@ import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
 import { asyncTimeout } from 'utils/utils'
 import FullscreenRoundedIcon from '@material-ui/icons/FullscreenRounded'
 import FullscreenExitRoundedIcon from '@material-ui/icons/FullscreenExitRounded'
-import { ProgressTrack, Controls } from './helpers'
+import { ProgressTrack, Controls, Lyrics } from './helpers'
 import { useExtractColor } from 'utils/customHooks'
+import TextFieldsIcon from '@material-ui/icons/TextFields'
+import { typographyColor } from 'theme'
+import { useSelector } from 'react-redux'
+import { get } from 'lodash'
 
 const useStyles = makeStyles(theme => {
   const size = '45vh'
@@ -29,7 +33,7 @@ const useStyles = makeStyles(theme => {
       height: '100vh',
       borderRadius: 5,
       display: 'flex',
-      justifyContent: 'center',
+      justifyContent: ({ showLyrics }) => showLyrics ? 'space-evenly' : 'center',
       alignItems: 'center',
       zIndex: 1,
       backdropFilter: 'blur(50px)',
@@ -67,7 +71,9 @@ const useStyles = makeStyles(theme => {
       width: size,
       alignItems: 'center',
       opacity: ({ open }) => open ? 1 : 0,
-      transform: ({ open }) => open ? 'scale(1)' : 'scale(.5)',
+      transform: ({ open }) => open
+        ? 'scale(1)'
+        : 'scale(.5)',
       transition: 'opacity .5s ease .4s, transform .4s ease .4s',
       willChange: 'transform, opacity'
     },
@@ -107,10 +113,12 @@ const DesktopPlayer = props => {
   const { open, handleClosePlayer, smallCover, fullCover, isPlaying, handlePlay, timeScaled, handleChangeProgress, play, pause } = props
   const dominantColor = useExtractColor(smallCover)
   const [isFullScreen, setIsFullScreen] = useState(false)
-  const classes = useStyles({ open, smallCover, fullCover, isFullScreen, dominantColor })
+  const [showLyrics, setShowLyrics] = useState(false)
+  const classes = useStyles({ open, smallCover, fullCover, isFullScreen, dominantColor, showLyrics })
   const ref = useRef(null)
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const track = useSelector(state => get(state, 'player.current', {}))
 
   useLayoutEffect(() => {
     const setBodyPosition = async () => {
@@ -143,6 +151,8 @@ const DesktopPlayer = props => {
     pause
   }
 
+  const toggleLyrics = () => setShowLyrics(state => !state)
+
   return (
     <div ref={ref} className={classes.main}>
       <Grid container spacing={3} className={classes.tooltips} justify='flex-end'>
@@ -171,7 +181,16 @@ const DesktopPlayer = props => {
           isSmallScreen={isSmallScreen}
           isPlaying={isPlaying}
           handlePlay={handlePlay} />
+        {!isSmallScreen && track.id && <Tooltip title='Lyrics'>
+          <IconButton
+            aria-label='lyrics'
+            onClick={toggleLyrics}
+            style={{ color: typographyColor }}>
+            <TextFieldsIcon {...showLyrics && { color: 'primary' }} />
+          </IconButton>
+        </Tooltip>}
       </div>
+      <Lyrics id={track.id} open={showLyrics} isPlayerOpen={open} />
     </div>
   )
 }

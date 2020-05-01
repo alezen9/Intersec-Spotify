@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Collapse from '@material-ui/core/Collapse'
-import { Typography, CircularProgress, Grid, Fab } from '@material-ui/core'
+import { Typography, Grid, Fab } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTrackLyrics } from '_redux/actions/musicActions'
 import { requestResetByKey } from '_redux/actions/requestActions'
@@ -9,6 +9,7 @@ import { get } from 'lodash'
 import { Genius, GeniusWordMark } from 'assets/CustomIcons'
 import GridTypographyLabel from 'components/GridTypographyLabel'
 import { teal } from '@material-ui/core/colors'
+import Spinner from 'components/Loaders/Spinner'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -95,7 +96,7 @@ const Lyrics = props => {
                 ? <Typography style={{ whiteSpace: 'pre-wrap', opacity: 0.8 }} variant='body1'>
               OOps, couldn't find any lyrics! :/
                 </Typography>
-                : <CircularProgress />}
+                : <Spinner />}
             </div>}
         </Collapse>
       </div>
