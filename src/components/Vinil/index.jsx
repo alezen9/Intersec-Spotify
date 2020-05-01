@@ -2,7 +2,9 @@ import React from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
 import TextFieldsRoundedIcon from '@material-ui/icons/TextFieldsRounded'
 import { useLazyLoad } from 'utils/customHooks'
-// import { EquilizerIcon } from 'assets/CustomIcons'
+import { EquilizerIcon } from 'assets/CustomIcons'
+import { useSelector } from 'react-redux'
+import { get } from 'lodash'
 
 const useStyles = makeStyles(theme => {
   const padding = theme.spacing(2)
@@ -88,13 +90,17 @@ const Vinil = React.memo(props => {
   const { id, fullCover, smallCover, infoHeader, infoSubheader, actions, openDetails, type = 'track' } = props
   const largeImage = useLazyLoad(fullCover)
   const classes = useStyles({ large: largeImage, small: smallCover })
+  const { currentTrack, isPlaying } = useSelector(state => ({
+    currentTrack: get(state, 'player.current.id', null),
+    isPlaying: get(state, 'player.isPlaying', false)
+  }))
   return (
     <div id={id} className={classes.container} >
       {/* INFO */}
       <div className={classes.header}>
         <div className={classes.equilizerContainer}>
           <Typography variant='h6'>{infoHeader}</Typography>
-          {/* <EquilizerIcon color='primary' /> */}
+          {currentTrack === id && <EquilizerIcon animate={isPlaying} color='primary' />}
         </div>
         {infoSubheader && <Typography variant='caption'>{infoSubheader}</Typography>}
       </div>

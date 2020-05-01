@@ -3,11 +3,12 @@ import { useTheme, useMediaQuery, makeStyles, Typography } from '@material-ui/co
 // import MobilePlayer from './Mobile'
 import DesktopPlayer from './Desktop'
 import { asyncTimeout } from 'utils/utils'
-import { useSelector } from 'react-redux'
-import { get, minBy, maxBy, isEmpty } from 'lodash'
+import { useSelector, useDispatch } from 'react-redux'
+import { get, minBy, maxBy, isEmpty, uniqueId } from 'lodash'
 import { useLazyLoad } from 'utils/customHooks'
 import { Controls } from './helpers'
 import { teal } from '@material-ui/core/colors'
+import { setSimplePlayer, setPlaybackStatus } from '_redux/actions/playerActions'
 
 const useStyles = makeStyles(theme => ({
   player: {
@@ -82,11 +83,13 @@ const useStyles = makeStyles(theme => ({
 const Player = props => {
   const [fullPlayer, setFullPlayer] = useState(false)
   const theme = useTheme()
+  const dispatch = useDispatch()
+  const [audioRefId] = useState(uniqueId('audio-'))
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [displayFull, setDisplayFull] = useState('none')
   const [isPlaying, setIsPLaying] = useState(false)
   const [time, setTime] = useState(0)
-  const audioRef = useRef()
+  const audioRef = useRef(null)
   const track = useSelector(state => get(state, 'player.current', {}))
   const { large, small } = useMemo(() => {
     if (isEmpty(track)) return {}
@@ -125,17 +128,19 @@ const Player = props => {
       e.preventDefault()
       e.stopPropagation()
     }
-    if (audioRef) {
+    if (audioRef && !isEmpty(track)) {
       const audio = audioRef.current
       if (audio.paused) {
         audio.play()
-        setIsPLaying(true)
       } else {
         audio.pause()
-        setIsPLaying(false)
       }
     }
   }
+
+  useEffect(() => {
+    if (audioRefId) dispatch(setSimplePlayer(audioRefId))
+  }, [audioRefId, dispatch])
 
   useEffect(() => {
     if (!isEmpty(track)) setIsPLaying(true)
@@ -155,7 +160,36 @@ const Player = props => {
 
   const onEnd = e => {
     setIsPLaying(false)
+    dispatch(setPlaybackStatus({ isPlaying: false }))
     setTime(0)
+  }
+
+  const play = () => {
+    if (audioRef) {
+      const audio = audioRef.current
+      if (audio.paused) {
+        audio.play()
+      }
+    }
+  }
+
+  const pause = () => {
+    if (audioRef) {
+      const audio = audioRef.current
+      if (!audio.paused) {
+        audio.pause()
+      }
+    }
+  }
+
+  const dispatchPlaying = () => {
+    setIsPLaying(true)
+    dispatch(setPlaybackStatus({ isPlaying: true }))
+  }
+
+  const dispatchPaused = () => {
+    setIsPLaying(false)
+    dispatch(setPlaybackStatus({ isPlaying: false }))
   }
 
   const fullPlayerProps = {
@@ -164,6 +198,8 @@ const Player = props => {
     smallCover: small,
     fullCover,
     handlePlay,
+    play,
+    pause,
     isPlaying,
     timeScaled: time,
     handleChangeProgress
@@ -171,10 +207,13 @@ const Player = props => {
 
   return <>
     <audio
+      id={audioRefId}
       ref={audioRef}
-      src={track.previewUri}
+      src={track.previewUri || track.previewUriDezeer}
       onEnded={onEnd}
       onTimeUpdate={onTimeUpdate}
+      onPauseCapture={dispatchPaused}
+      onPlayCapture={dispatchPlaying}
       autoPlay
       hidden />
     {!fullPlayer && <div onClick={handleOpenPlayer} className={player}>
@@ -184,7 +223,7 @@ const Player = props => {
         <Typography variant='h5'>{get(track, 'artists[0].name', 'Not playing')}</Typography>
         {get(track, 'name', null) && <Typography variant='caption'>{get(track, 'name', '-')}</Typography>}
       </div>
-      <Controls isPlaying={isPlaying} handlePlay={handlePlay} />
+      <Controls isOpen={fullPlayer} isPlaying={isPlaying} handlePlay={handlePlay} />
     </div>}
     <div style={{ display: displayFull }}>
       {isSmallScreen

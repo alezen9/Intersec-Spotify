@@ -102,6 +102,7 @@ export const _getTopTracksArtists = input => {
         duration,
         explicit,
         previewUri,
+        previewUriDezeer,
         popularity,
         isAvailableCountry,
         album {

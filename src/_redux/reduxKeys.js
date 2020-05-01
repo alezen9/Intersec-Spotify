@@ -27,5 +27,7 @@ export const LYRICS = 'LYRICS'
 export const SET_ACTIVE_SECTION = 'SET_ACTIVE_SECTION'
 // player
 export const TRACK_STATUS = 'TRACK_STATUS'
+export const PLAYBACK_STATUS = 'PLAYBACK_STATUS'
+export const SET_SIMPLE_PLAYER = 'SET_SIMPLE_PLAYER'
 // all
 export const RESET_ALL = 'RESET_ALL'

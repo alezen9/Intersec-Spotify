@@ -33,12 +33,12 @@ const useStyles = makeStyles(theme => ({
 const TrackDetails = props => {
   const { id } = props
   const dispatch = useDispatch()
-  const details = useSelector(state => get(state, 'music.details', {}))
+  const details = useSelector(state => get(state, `music.details.${id}`, {}))
   const classes = useStyles({ background: get(minBy(get(details, 'album.images', []), 'width'), 'url', null) })
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState(!!get(details, 'lyrics', false))
 
   const handleChange = () => {
     setChecked((prev) => !prev)
@@ -53,8 +53,7 @@ const TrackDetails = props => {
         }))
       }
     },
-    [dispatch, id]
-  )
+    [dispatch, id])
 
   useEffect(() => {
     getData()

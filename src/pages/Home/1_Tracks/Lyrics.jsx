@@ -53,14 +53,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const GET_LYRICS_KEY = 'GET_LYRICS_KEY'
+export const GET_LYRICS_KEY = 'GET_LYRICS_KEY'
 
 const Lyrics = props => {
   const { showLyrics = false, trackId } = props
   const classes = useStyles()
   const dispatch = useDispatch()
   const { lyrics, requestLyrics } = useSelector(state => ({
-    lyrics: get(state, 'music.details.lyrics', null),
+    lyrics: get(state, `music.details.${trackId}.lyrics`, null),
     requestLyrics: get(state, `request.${GET_LYRICS_KEY}`)
   }))
 

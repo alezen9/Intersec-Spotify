@@ -1,4 +1,5 @@
 import { TOP_TRACKS_ARTISTS, ITEM_DETAILS, LYRICS, RESET_ALL } from '../reduxKeys'
+import { get } from 'lodash'
 
 const initState = {
   top: {
@@ -20,14 +21,21 @@ const musicReducer = (state = initState, { type, payload }) => {
     case ITEM_DETAILS:
       return {
         ...state,
-        details: payload
+        details: {
+          ...(state.details || {}),
+          [payload.id]: payload
+        }
       }
     case LYRICS:
+      const thisTrack = get(state, `details.${payload.id}`, {})
       return {
         ...state,
         details: {
           ...state.details,
-          ...payload
+          [payload.id]: {
+            ...thisTrack,
+            ...payload
+          }
         }
       }
     case RESET_ALL:

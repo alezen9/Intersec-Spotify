@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useCallback, useRef, useState, useEffect } from 'react'
+import React, { useLayoutEffect, useCallback, useRef, useState } from 'react'
 import { makeStyles, IconButton, Tooltip, Grid, useTheme, useMediaQuery } from '@material-ui/core'
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
 import { asyncTimeout } from 'utils/utils'
@@ -104,17 +104,13 @@ const useStyles = makeStyles(theme => {
 })
 
 const DesktopPlayer = props => {
-  const { open, handleClosePlayer, smallCover, fullCover, isPlaying, handlePlay, timeScaled, handleChangeProgress } = props
+  const { open, handleClosePlayer, smallCover, fullCover, isPlaying, handlePlay, timeScaled, handleChangeProgress, play, pause } = props
   const dominantColor = useExtractColor(smallCover)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const classes = useStyles({ open, smallCover, fullCover, isFullScreen, dominantColor })
   const ref = useRef(null)
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
-
-  useEffect(() => {
-    console.log(dominantColor)
-  }, [dominantColor])
 
   useLayoutEffect(() => {
     const setBodyPosition = async () => {
@@ -140,6 +136,13 @@ const DesktopPlayer = props => {
       }
     }, [isFullScreen])
 
+  const progressProps = {
+    timeScaled,
+    onChange: handleChangeProgress,
+    play,
+    pause
+  }
+
   return (
     <div ref={ref} className={classes.main}>
       <Grid container spacing={3} className={classes.tooltips} justify='flex-end'>
@@ -162,8 +165,12 @@ const DesktopPlayer = props => {
       </Grid>
       <div className={classes.playerWrapper}>
         <div className={classes.cover} />
-        <ProgressTrack timeScaled={timeScaled} onChange={handleChangeProgress} />
-        <Controls isPlaying={isPlaying} handlePlay={handlePlay} />
+        <ProgressTrack {...progressProps} />
+        <Controls
+          isOpen={open}
+          isSmallScreen={isSmallScreen}
+          isPlaying={isPlaying}
+          handlePlay={handlePlay} />
       </div>
     </div>
   )

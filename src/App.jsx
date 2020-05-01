@@ -9,7 +9,6 @@ import OfflinePage from 'pages/Offline'
 // pages
 import Login from 'pages/Login'
 // actions
-import { requestResetByKey } from '_redux/actions/requestActions'
 import { setUserToken, checkToken } from '_redux/actions/userActions'
 // utils
 import { snackbarSuccessMessages } from 'utils/snackbarMessages'
@@ -28,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     position: 'relative',
     marginTop: 'calc(64px + 1.5em)',
-    padding: '1.5em',
+    padding: '1.5em 1.5em 2.5em 1.5em',
     boxSizing: 'border-box',
     width: '100%',
     overflow: 'hidden',
@@ -103,7 +102,6 @@ const App = props => {
             preventDuplicate: true,
             persist: false
           })
-          // dispatch(requestResetByKey(key))
         }
         if (status === 'REQUEST_SUCCESS' && snackbarSuccessMessages[key]) {
           const message = snackbarSuccessMessages[key]
@@ -111,7 +109,6 @@ const App = props => {
             variant: 'success',
             action
           })
-          // dispatch(requestResetByKey(key))
         }
       })
     }

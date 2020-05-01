@@ -6,10 +6,11 @@ import {
   REQUEST_RESET_BY_KEY
 } from '_redux/reduxKeys'
 
-export const requestIsFetching = dispatch => key => dispatch({
+export const requestIsFetching = dispatch => (key, cancelToken) => dispatch({
   type: REQUEST_FETCHING,
   payload: {
-    key
+    key,
+    ...cancelToken && { cancelToken }
   }
 })
 
@@ -18,15 +19,17 @@ export const requestSuccess = dispatch => key => {
 }
 
 export const requestFailure = dispatch => (key, error) => {
-  console.error(`requestFailure: ${key}`)
-  console.error(error)
-  return dispatch({
-    type: REQUEST_FAILURE,
-    payload: {
-      key,
-      error: error.message.replace('GraphQL error: ', '')
-    }
-  })
+  if (error && error.message) {
+    console.error(`requestFailure: ${key}`)
+    console.error(error)
+    return dispatch({
+      type: REQUEST_FAILURE,
+      payload: {
+        key,
+        error: error.message.replace('GraphQL error: ', '')
+      }
+    })
+  }
 }
 
 export const requestReset = () => {

@@ -1,12 +1,11 @@
 import { find, get } from 'lodash'
 import FastAverageColor from 'fast-average-color'
 
-export const extractColor = async (src) => {
+export const extractColor = async src => {
   const fac = new FastAverageColor()
   try {
     const img = await loadImage(src)
     const res = await fac.getColorAsync(img)
-    console.log(res, img)
     fac.destroy()
     return Promise.resolve(res.rgba)
   } catch (error) {

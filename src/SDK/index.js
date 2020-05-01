@@ -62,8 +62,8 @@ class IntersecServer {
     window.location.replace(`${keys.backend_url}/auth/spotify`)
   }
 
-  async graphql ({ name, query }) {
-    return this._self.post('/graphql', { query })
+  async graphql ({ name, query }, otherParams) {
+    return this._self.post('/graphql', { query }, otherParams || {})
       .then(({ data }) => {
         if (data.errors) throw data.errors[0]
         else return data.data[name]

@@ -43,10 +43,10 @@ const useStyles = makeStyles({
 })
 
 export const EquilizerIcon = props => {
-  const { animate = true } = props
+  const { animate = true, ...restOfProps } = props
   const { eqBar, noAnimationEqBar } = useStyles()
   return (
-    <SvgIcon {...props} classes={{ root: animate ? eqBar : noAnimationEqBar }} viewBox='0 0 24 24'>
+    <SvgIcon {...restOfProps} classes={{ root: animate ? eqBar : noAnimationEqBar }} viewBox='0 0 24 24'>
       <rect x='4' y='4' width='3.7' height='8' />
       <rect x='10.2' y='4' width='3.7' height='16' />
       <rect x='16.3' y='4' width='3.7' height='11' />

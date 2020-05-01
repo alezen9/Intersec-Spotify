@@ -3,7 +3,9 @@ import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import TextFieldsRoundedIcon from '@material-ui/icons/TextFieldsRounded'
 import { EquilizerIcon } from 'assets/CustomIcons'
 import { useLazyLoad } from 'utils/customHooks'
-import { teal } from '@material-ui/core/colors'
+import { get } from 'lodash'
+import { useSelector } from 'react-redux'
+import PlayCircleFilledRoundedIcon from '@material-ui/icons/PlayCircleFilledRounded'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -80,7 +82,7 @@ const useStyles = makeStyles(theme => {
       '&>*:nth-child(2)': {
         display: 'grid',
         gridTemplateColumns: '1fr',
-        gridTemplateRows: 'repeat(2, 1fr)'
+        gridTemplateRows: ({ type }) => `repeat(${type === 'track' ? 2 : 1}, 1fr)`
       },
       '&>*:last-child': {
         gridRow: '1 / 1',
@@ -93,21 +95,28 @@ const useStyles = makeStyles(theme => {
 })
 
 const ListItemVinil = props => {
-  const { id, name = '-', artist = '-', fullCover, smallCover, openDetails, playTrack, isPlayable, type = 'track' } = props
+  const { id, name = '-', artist, fullCover, smallCover, openDetails, playTrack, isPlayable, type = 'track' } = props
   const largeImage = useLazyLoad(fullCover)
+  const { currentTrack, isPlaying } = useSelector(state => ({
+    currentTrack: get(state, 'player.current.id', null),
+    isPlaying: get(state, 'player.isPlaying', false)
+  }))
 
-  const { mainGrid, image, texts, actionClass, equilizer } = useStyles({ large: largeImage, small: smallCover, isPlayable })
+  const { mainGrid, image, texts, actionClass, equilizer } = useStyles({ large: largeImage, small: smallCover, isPlayable, type })
   return (
     <>
       <div id={id} className={mainGrid} >
         <div className={image} {...isPlayable && { onClick: playTrack }}>
-          {false && <div className={equilizer}>
-            <EquilizerIcon color='primary' />
+          {isPlayable && <div className={equilizer}>
+            {currentTrack !== id
+              ? <PlayCircleFilledRoundedIcon color='primary' />
+              : <EquilizerIcon animate={isPlaying} color='primary' />}
+
           </div>}
         </div>
         <div className={texts} {...isPlayable && { onClick: playTrack }}>
           <Typography variant='h4'>{name}</Typography>
-          <Typography variant='caption'>{artist}</Typography>
+          {artist && <Typography variant='caption'>{artist}</Typography>}
         </div>
         <div className={actionClass}>
           {type === 'track' && <IconButton

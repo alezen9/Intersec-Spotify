@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef, useMemo } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Tooltip, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
 import { getTopTracksArtists } from '_redux/actions/musicActions'
@@ -6,8 +6,8 @@ import Vinil from 'components/Vinil'
 import ListItemVinil from 'components/Vinil/ListItemVinil'
 import { TopSearch } from '_redux/Entities'
 import { get, maxBy, minBy } from 'lodash'
-import PauseCircleFilledRoundedIcon from '@material-ui/icons/PauseCircleFilledRounded'
-import PlayCircleFilledRoundedIcon from '@material-ui/icons/PlayCircleFilledRounded'
+import PauseRoundedIcon from '@material-ui/icons/PauseRounded'
+import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded'
 import TrackDetails from './Details'
 import { setActiveSection } from '_redux/actions/configActions'
 import { AnimatedListWrapper } from '../helpers'
@@ -15,45 +15,48 @@ import LoadingMask from 'components/LoadingMask'
 import { checkIsFetching } from 'utils/utils'
 import { playerTrackStatus } from '_redux/actions/playerActions'
 import CustomDialog from 'components/Dialog'
+import { GET_LYRICS_KEY } from './Lyrics'
 
 const GET_TOP_TRACKS_KEY = 'GET_TOP_TRACKS_KEY'
 
 const Actions = React.memo(props => {
-  const { url, playTrack } = props
-  const audioRef = useRef(null)
-  const [isPlaying, setIsPLaying] = useState(false)
+  const { id, playTrack, isPlayable } = props
+  const { currentTrack, ref, isPlaying } = useSelector(state => ({
+    currentTrack: get(state, 'player.current.id', null),
+    ref: get(state, 'player.simplePlayerId', null),
+    isPlaying: get(state, 'player.isPlaying', false)
+  }))
 
-  const playThis = () => {
-    if (audioRef) {
-      const audio = audioRef.current
-      if (audio.paused) {
-        audio.play()
-        setIsPLaying(true)
-      } else {
-        audio.pause()
-        setIsPLaying(false)
-      }
+  const audioRef = useMemo(() => {
+    if (ref) return document.getElementById(ref)
+    else return null
+  }, [ref])
+
+  const togglePlay = () => {
+    if (currentTrack !== id) {
+      playTrack()
+    } else if (currentTrack === id) {
+      if (audioRef.paused) audioRef.play()
+      else if (!audioRef.paused) audioRef.pause()
     }
   }
-  return url
+
+  return isPlayable
     ? <>
       <Grid item>
-        <Tooltip
+        {<Tooltip
           title='Play'
-          onClick={playTrack}
+          onClick={togglePlay}
           arrow>
           <IconButton color='primary' aria-label='Play'>
-            {!isPlaying
-              ? <PlayCircleFilledRoundedIcon />
-              : <PauseCircleFilledRoundedIcon />}
+            {currentTrack !== id
+              ? <PlayArrowRoundedIcon />
+              : !isPlaying
+                ? <PlayArrowRoundedIcon />
+                : <PauseRoundedIcon />}
           </IconButton>
-        </Tooltip>
+        </Tooltip>}
       </Grid>
-      <audio
-        ref={audioRef}
-        src={url}
-        onEnded={() => setIsPLaying(false)}
-        hidden />
     </>
     : <></>
 })
@@ -61,9 +64,10 @@ const Actions = React.memo(props => {
 const Tracks = props => {
   const { filters } = props
   const dispatch = useDispatch()
-  const { tracks, isFetching } = useSelector(state => ({
+  const { tracks, isFetching, requestLyrics } = useSelector(state => ({
     tracks: get(state, 'music.top.tracks', []),
-    isFetching: checkIsFetching({ state, key: GET_TOP_TRACKS_KEY })
+    isFetching: checkIsFetching({ state, key: GET_TOP_TRACKS_KEY }),
+    requestLyrics: get(state, `request.${GET_LYRICS_KEY}`)
   }))
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
@@ -92,8 +96,16 @@ const Tracks = props => {
     track => () => {
       dispatch(playerTrackStatus(track))
     },
-    [dispatch]
-  )
+    [dispatch])
+
+  const onCloseDialog = useCallback(
+    () => {
+      if (get(requestLyrics, 'status', null) === 'REQUEST_FETCHING' && get(requestLyrics, 'cancelToken', null)) {
+        requestLyrics.cancelToken.cancel()
+      }
+      setDetails(null)
+    },
+    [requestLyrics])
 
   useEffect(() => {
     getData()
@@ -109,8 +121,8 @@ const Tracks = props => {
       smallCover: minBy(get(track, 'album.images', []), 'width').url,
       playTrack: setPlayingStatus(track),
       details: <TrackDetails id={track.id} />,
-      isPlayable: !!track.previewUri,
-      actions: <Actions url={track.previewUri} playTrack={setPlayingStatus(track)} />,
+      isPlayable: !!(track.previewUri || track.previewUriDezeer),
+      actions: <Actions isPlayable={!!(track.previewUri || track.previewUriDezeer)} id={track.id} playTrack={setPlayingStatus(track)} />,
       infoHeader: get(track, 'artists[0].name', ''),
       infoSubheader: track.name,
       openDetails: () => setDetails({
@@ -132,7 +144,7 @@ const Tracks = props => {
         title={get(details, 'name', '')}
         open={!!details}
         fullHeight={get(details, 'fullHeight', '')}
-        onClose={() => setDetails(null)}
+        onClose={onCloseDialog}
         content={<TrackDetails id={get(details, 'id', null)} />}
       />
     </>

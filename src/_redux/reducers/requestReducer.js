@@ -12,11 +12,12 @@ const requestReducer = (state = initialState, { type, payload }) => {
     case REQUEST_FAILURE:
     case REQUEST_FETCHING:
     case REQUEST_SUCCESS:
-      const { key, error = null } = payload
+      const { key, error = null, cancelToken = undefined } = payload
       const value = {}
       value[key] = {
         status: `${type}`,
-        error: error
+        error: error,
+        ...cancelToken && { cancelToken }
       }
       return {
         ...state,
