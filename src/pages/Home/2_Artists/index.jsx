@@ -16,7 +16,7 @@ const GET_TOP_ARTISTS_KEY = 'GET_TOP_ARTISTS_KEY'
 const Artists = props => {
   const dispatch = useDispatch()
   const { artists, isFetching } = useSelector(state => ({
-    artists: get(state, 'music.top.artists', []),
+    artists: get(state, `music.top.artists.medium_term`, {}),
     isFetching: checkIsFetching({ state, key: GET_TOP_ARTISTS_KEY })
   }))
   const theme = useTheme()

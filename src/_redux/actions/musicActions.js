@@ -6,21 +6,28 @@ import axios from 'axios'
 import { get } from 'lodash'
 
 export const getTopTracksArtists = data => {
-  const { key = 'GENERIC_KEY', type = 'tracks', offset, limit, timeRange } = data
+  const { key = 'GENERIC_KEY', type = 'tracks', offset = 0, limit = 20, timeRange = 'medium_term', more = false } = data
   return async (dispatch, getState) => {
     try {
       const state = getState()
       const { country: market } = state.user
-      requestIsFetching(dispatch)(key)
-      const query = _getTopTracksArtists({ type, market, offset, limit, timeRange })
-      const res = await apiInstance.graphql(query)
-      dispatch({
-        type: TOP_TRACKS_ARTISTS,
-        payload: {
-          [type]: res
-        }
-      })
-      requestSuccess(dispatch)(key)
+      const { offset: _off = -1, total } = get(state, `music.top.${type}.${timeRange}`, {})
+      const hasMore = _off + limit <= total
+      if ((!more && offset > _off) || (more && hasMore)) {
+        console.log(timeRange, _off, total, hasMore)
+        requestIsFetching(dispatch)(key)
+        const query = _getTopTracksArtists({ type, market, offset: more ? _off + limit : offset, limit, timeRange })
+        const res = await apiInstance.graphql(query)
+        dispatch({
+          type: TOP_TRACKS_ARTISTS,
+          payload: {
+            type,
+            timeRange,
+            res
+          }
+        })
+        requestSuccess(dispatch)(key)
+      }
     } catch (error) {
       requestFailure(dispatch)(key, error)
     }

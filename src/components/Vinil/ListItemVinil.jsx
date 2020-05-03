@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
-import TextFieldsRoundedIcon from '@material-ui/icons/TextFieldsRounded'
+import TextsmsOutlinedIcon from '@material-ui/icons/TextsmsOutlined'
 import { EquilizerIcon } from 'assets/CustomIcons'
 import { useLazyLoad } from 'utils/customHooks'
 import { get } from 'lodash'
@@ -123,7 +123,7 @@ const ListItemVinil = props => {
             color='primary'
             onClick={() => openDetails(true)}
             aria-label='Lyrics'>
-            <TextFieldsRoundedIcon />
+            <TextsmsOutlinedIcon />
           </IconButton>}
         </div>
       </div>

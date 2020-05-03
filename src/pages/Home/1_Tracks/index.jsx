@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react'
+import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Tooltip, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
 import { getTopTracksArtists } from '_redux/actions/musicActions'
@@ -63,15 +63,40 @@ const Actions = React.memo(props => {
 
 const Tracks = props => {
   const { filters } = props
+  const _filters = useRef(filters)
   const dispatch = useDispatch()
-  const { tracks, isFetching, requestLyrics } = useSelector(state => ({
-    tracks: get(state, 'music.top.tracks', []),
+  const { items, offset, total, isFetching, requestLyrics } = useSelector(state => ({
+    ...get(state, `music.top.tracks.${filters.timeRange}`, {}),
     isFetching: checkIsFetching({ state, key: GET_TOP_TRACKS_KEY }),
     requestLyrics: get(state, `request.${GET_LYRICS_KEY}`)
   }))
+
+  const hasMore = offset + 20 <= total
+
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [details, setDetails] = useState(null)
+  const [element, setElement] = useState(null)
+  const observer = useRef(
+    new window.IntersectionObserver(
+      entries => {
+        const first = entries[0]
+        if (first.isIntersecting) {
+          dispatch(getTopTracksArtists({
+            key: GET_TOP_TRACKS_KEY,
+            type: TopSearch.Tracks,
+            more: true,
+            ..._filters.current
+          }))
+        }
+      },
+      { threshold: 1 }
+    )
+  )
+
+  useEffect(() => {
+    _filters.current = filters
+  }, [filters])
 
   useEffect(() => {
     const target = document.querySelector('#tracks-grid')
@@ -111,11 +136,26 @@ const Tracks = props => {
     getData()
   }, [getData])
 
-  const listProps = useMemo(() => tracks && tracks.items
-    ? tracks.items.map((track, i) => ({
+  useEffect(() => {
+    const currentElement = element
+    const currentObserver = observer.current
+
+    if (currentElement) {
+      currentObserver.observe(currentElement)
+    }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement)
+      }
+    }
+  }, [element])
+
+  const listProps = useMemo(() => items && items.length
+    ? items.map(track => ({
       id: track.id,
       name: track.name,
-      key: `top-track-${i}`,
+      key: `top-track-${track.id}`,
       artist: get(track, 'artists[0].name', ''),
       fullCover: maxBy(get(track, 'album.images', []), 'width').url,
       smallCover: minBy(get(track, 'album.images', []), 'width').url,
@@ -131,7 +171,7 @@ const Tracks = props => {
         fullHeight: !isSmallScreen
       })
     }))
-    : [], [tracks, isSmallScreen, setPlayingStatus])
+    : [], [items, isSmallScreen, setPlayingStatus])
 
   return (
     <>
@@ -139,6 +179,7 @@ const Tracks = props => {
         <AnimatedListWrapper>
           {listProps.map(p => <Item {...p} isSmallScreen={isSmallScreen} />)}
         </AnimatedListWrapper>
+        {!isFetching && hasMore && <div ref={setElement} style={{ background: 'transparent' }} />}
       </LoadingMask>
       <CustomDialog
         title={get(details, 'name', '')}

@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
     height: '.1em',
     opacity: 0.5,
     display: 'flex',
-    position: 'relative'
+    position: 'relative',
+    padding: '.5em 0'
   },
   rail: {
     height: 3,
@@ -89,24 +90,25 @@ const duration = 30
 
 const scale = dur => x => (x * dur).toFixed(2)
 
-export const ProgressTrack = props => {
+export const ProgressTrack = React.memo(props => {
   const { timeScaled = 0, onChange, play, pause } = props
+  const track = useSelector(state => get(state, 'player.current', null))
   const classes = useStyles()
 
   const handleChangeProgress = useCallback(
     (e, newValue) => {
       e.preventDefault()
       e.stopPropagation()
-      if (pause) pause()
+      if (pause && track) pause()
       onChange(newValue * duration)
-    }, [onChange, pause])
+    }, [onChange, pause, track])
 
   const handleChangeCommitted = useCallback(
     (e, newValue) => {
       e.preventDefault()
       e.stopPropagation()
-      if (play) play()
-    }, [play])
+      if (play && track) play()
+    }, [play, track])
 
   return (
     <Grid spacing={0} container justify='space-between' alignItems='center' className={classes.progressWrapper}>
@@ -129,15 +131,19 @@ export const ProgressTrack = props => {
       </Grid>
       <Grid container item xs={12} spacing={0} justify='space-between'>
         <Grid item xs={6}>
-          <span>{getTime(timeScaled * duration)}</span>
+          <span>
+            {track ? getTime(timeScaled * duration) : '00:00'}
+          </span>
         </Grid>
         <Grid item xs={6} align='right'>
-          <span>-{getTime(duration - (timeScaled * duration))}</span>
+          <span>
+            {track ? `-${getTime(duration - (timeScaled * duration))}` : '00:00'}
+          </span>
         </Grid>
       </Grid>
     </Grid>
   )
-}
+})
 
 export const Controls = React.memo(props => {
   const { isPlaying, handlePlay, isOpen } = props

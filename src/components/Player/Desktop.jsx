@@ -1,15 +1,15 @@
 import React, { useLayoutEffect, useCallback, useRef, useState } from 'react'
-import { makeStyles, IconButton, Tooltip, Grid, useTheme, useMediaQuery } from '@material-ui/core'
+import { makeStyles, IconButton, Tooltip, Grid, useTheme, useMediaQuery, Typography } from '@material-ui/core'
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded'
 import { asyncTimeout } from 'utils/utils'
 import FullscreenRoundedIcon from '@material-ui/icons/FullscreenRounded'
 import FullscreenExitRoundedIcon from '@material-ui/icons/FullscreenExitRounded'
 import { ProgressTrack, Controls, Lyrics } from './helpers'
 import { useExtractColor } from 'utils/customHooks'
-import TextFieldsIcon from '@material-ui/icons/TextFields'
 import { typographyColor } from 'theme'
 import { useSelector } from 'react-redux'
 import { get } from 'lodash'
+import TextsmsOutlinedIcon from '@material-ui/icons/TextsmsOutlined'
 
 const useStyles = makeStyles(theme => {
   const size = '45vh'
@@ -99,6 +99,15 @@ const useStyles = makeStyles(theme => {
         willChange: 'background-image, filter'
       }
     },
+    info: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: typographyColor,
+      margin: '2em 0'
+    },
     tooltips: {
       position: 'absolute',
       top: 0,
@@ -175,6 +184,14 @@ const DesktopPlayer = props => {
       </Grid>
       <div className={classes.playerWrapper}>
         <div className={classes.cover} />
+        <div className={classes.info}>
+          {track.id
+            ? <>
+              <Typography variant='h6'>{get(track, 'artists[0].name', '-')}</Typography>
+              <Typography variant='h5' color='primary'>{get(track, 'name', '-')}</Typography>
+              </>
+            : <Typography variant='h6'>Not playing</Typography>}
+        </div>
         <ProgressTrack {...progressProps} />
         <Controls
           isOpen={open}
@@ -186,7 +203,7 @@ const DesktopPlayer = props => {
             aria-label='lyrics'
             onClick={toggleLyrics}
             style={{ color: typographyColor }}>
-            <TextFieldsIcon {...showLyrics && { color: 'primary' }} />
+            <TextsmsOutlinedIcon {...showLyrics && { color: 'primary' }} />
           </IconButton>
         </Tooltip>}
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -8,7 +8,7 @@ import { boxShadow, typographyColor } from 'theme'
 import { Controls, ProgressTrack } from './helpers'
 import { useSelector } from 'react-redux'
 import { get } from 'lodash'
-import { motion, useMotionValue } from 'framer-motion'
+import { motion, useMotionValue, useTransform } from 'framer-motion'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide ref={ref} direction='up' {...props} />
@@ -26,11 +26,8 @@ const useStyles = makeStyles(theme => ({
   paper: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    overflow: 'hidden'
-  },
-  title: {
-    transform: ({ y }) => `translateY(${-y + 25}px)`,
-    willChange: 'transform'
+    overflow: 'hidden',
+    background: 'linear-gradient(to top, #1A1B1F, #333)'
   },
   dragLine: {
     height: 5,
@@ -41,9 +38,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
-    overflowY: 'visible',
-    transform: ({ y }) => `translateY(${-y + 25}px)`,
-    willChange: 'transform'
+    overflowY: 'visible'
   },
   cover: {
     position: 'relative',
@@ -80,8 +75,6 @@ const useStyles = makeStyles(theme => ({
   controlsWrapper: {
     width: '100%',
     '&>div:nth-of-type(2)': {
-      height: 'auto',
-      paddingRight: 0,
       '& svg': {
         fontSize: '1.5em'
       }
@@ -93,16 +86,24 @@ const MobilePlayer = props => {
   const { open, handleClosePlayer, smallCover, fullCover, isPlaying, handlePlay, timeScaled, handleChangeProgress, play, pause } = props
   const [y, setY] = useState(25)
   const [isDragging, setIsDragging] = useState(false)
-  const classes = useStyles({ smallCover, fullCover, y, isDragging })
   const track = useSelector(state => get(state, 'player.current', {}))
   const _y = useMotionValue(0)
+  const counterY = useTransform(_y, value => -value)
+  const classes = useStyles({ smallCover, fullCover, y, isDragging })
 
-  const progressProps = {
+  const progressProps = useMemo(() => ({
     timeScaled,
     onChange: handleChangeProgress,
     play,
     pause
-  }
+  }), [timeScaled, handleChangeProgress, play, pause])
+
+  const controlsProps = useMemo(() => ({
+    open,
+    isSmallScreen: true,
+    isPlaying,
+    handlePlay
+  }), [open, isPlaying, handlePlay])
 
   useEffect(() => {
     if (open) {
@@ -157,26 +158,28 @@ const MobilePlayer = props => {
         onDragEnd={onDragEnd}
         style={{ y: _y }}
       >
-        <DialogTitle className={classes.title}>
-          <Grid container spacing={0} justify='center'>
-            <Grid item xs={2} className={classes.dragLine} />
-          </Grid>
-        </DialogTitle>
-        <DialogContent className={classes.content}>
-          <div className={classes.cover} />
-          <div className={classes.info}>
-            <Typography variant='h6'>{get(track, 'artists[0].name', '-')}</Typography>
-            <Typography variant='h5' color='primary'>{get(track, 'name', '-')}</Typography>
-          </div>
-          <div className={classes.controlsWrapper}>
-            <ProgressTrack {...progressProps} />
-            <Controls
-              isOpen={open}
-              isSmallScreen
-              isPlaying={isPlaying}
-              handlePlay={handlePlay} />
-          </div>
-        </DialogContent>
+        <motion.div style={{ y: counterY }}>
+          <DialogTitle>
+            <Grid container spacing={0} justify='center'>
+              <Grid item xs={1} className={classes.dragLine} />
+            </Grid>
+          </DialogTitle>
+          <DialogContent className={classes.content}>
+            <div className={classes.cover} />
+            <div className={classes.info}>
+              {track.id
+                ? <>
+                  <Typography variant='h6'>{get(track, 'artists[0].name', '-')}</Typography>
+                  <Typography variant='h5' color='primary'>{get(track, 'name', '-')}</Typography>
+                </>
+                : <Typography variant='h6'>Not playing</Typography>}
+            </div>
+            <div className={classes.controlsWrapper}>
+              <ProgressTrack {...progressProps} />
+              <Controls {...controlsProps} />
+            </div>
+          </DialogContent>
+        </motion.div>
       </motion.div>
     </Dialog>
   )

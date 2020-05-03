@@ -7,7 +7,7 @@ import { trackArtistFilters, TabTitle } from './helpers'
 
 const Home = props => {
   const [openFilters, setOpenFilters] = useState(false)
-  const [filterVals, setFilterVals] = useState({})
+  const [filterVals, setFilterVals] = useState({ timeRange: 'medium_term' })
   const tracksTitleProps = useMemo(() => ({
     title: 'Top tracks',
     openFiltersFn: () => setOpenFilters(true)

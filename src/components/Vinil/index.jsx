@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles, Grid, Typography, Tooltip, IconButton } from '@material-ui/core'
-import TextFieldsRoundedIcon from '@material-ui/icons/TextFieldsRounded'
+import TextsmsOutlinedIcon from '@material-ui/icons/TextsmsOutlined'
 import { useLazyLoad } from 'utils/customHooks'
 import { EquilizerIcon } from 'assets/CustomIcons'
 import { useSelector } from 'react-redux'
@@ -113,7 +113,7 @@ const Vinil = React.memo(props => {
             onClick={openDetails}
             arrow>
             <IconButton color='primary' aria-label='Lyrics'>
-              <TextFieldsRoundedIcon />
+              <TextsmsOutlinedIcon />
             </IconButton>
           </Tooltip>
         </Grid>
