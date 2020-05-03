@@ -132,7 +132,7 @@ const DesktopPlayer = props => {
   useLayoutEffect(() => {
     const setBodyPosition = async () => {
       if (open) await asyncTimeout(600)
-      document.body.style.position = open ? 'fixed' : 'unset'
+      document.body.style.overflow = open ? 'hidden' : 'auto'
     }
     setBodyPosition()
   }, [open])
@@ -188,7 +188,7 @@ const DesktopPlayer = props => {
           {track.id
             ? <>
               <Typography variant='h6'>{get(track, 'artists[0].name', '-')}</Typography>
-              <Typography variant='h5' color='primary'>{get(track, 'name', '-')}</Typography>
+              <Typography variant='h5'>{get(track, 'name', '-')}</Typography>
               </>
             : <Typography variant='h6'>Not playing</Typography>}
         </div>

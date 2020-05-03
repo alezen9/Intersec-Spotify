@@ -94,7 +94,7 @@ const Lyrics = props => {
             : <div className={classes.loader}>
               {get(requestLyrics, 'status', null) === 'REQUEST_FAILURE'
                 ? <Typography style={{ whiteSpace: 'pre-wrap', opacity: 0.8 }} variant='body1'>
-              OOps, couldn't find any lyrics! :/
+              Oops, couldn't find any lyrics! :/
                 </Typography>
                 : <Spinner />}
             </div>}

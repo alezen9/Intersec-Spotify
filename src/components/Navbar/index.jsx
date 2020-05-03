@@ -50,7 +50,7 @@ const Navbar = props => {
   useLayoutEffect(() => {
     const setBodyPosition = async () => {
       if (open) await asyncTimeout(600)
-      document.body.style.position = open ? 'fixed' : 'unset'
+      document.body.style.overflow = open ? 'hidden' : 'auto'
     }
     setBodyPosition()
   }, [open])

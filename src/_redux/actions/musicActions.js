@@ -14,7 +14,6 @@ export const getTopTracksArtists = data => {
       const { offset: _off = -1, total } = get(state, `music.top.${type}.${timeRange}`, {})
       const hasMore = _off + limit <= total
       if ((!more && offset > _off) || (more && hasMore)) {
-        console.log(timeRange, _off, total, hasMore)
         requestIsFetching(dispatch)(key)
         const query = _getTopTracksArtists({ type, market, offset: more ? _off + limit : offset, limit, timeRange })
         const res = await apiInstance.graphql(query)

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid, Tooltip, IconButton, useTheme, useMediaQuery } from '@material-ui/core'
 import { getTopTracksArtists } from '_redux/actions/musicActions'
@@ -16,6 +16,7 @@ import { checkIsFetching } from 'utils/utils'
 import { playerTrackStatus } from '_redux/actions/playerActions'
 import CustomDialog from 'components/Dialog'
 import { GET_LYRICS_KEY } from './Lyrics'
+import InfiniteScrollLoader from 'components/InfiniteScrollLoader'
 
 const GET_TOP_TRACKS_KEY = 'GET_TOP_TRACKS_KEY'
 
@@ -63,7 +64,6 @@ const Actions = React.memo(props => {
 
 const Tracks = props => {
   const { filters } = props
-  const _filters = useRef(filters)
   const dispatch = useDispatch()
   const { items, offset, total, isFetching, requestLyrics } = useSelector(state => ({
     ...get(state, `music.top.tracks.${filters.timeRange}`, {}),
@@ -71,32 +71,13 @@ const Tracks = props => {
     requestLyrics: get(state, `request.${GET_LYRICS_KEY}`)
   }))
 
-  const hasMore = offset + 20 <= total
+  const hasMore = useMemo(() => ![null, undefined].includes(offset) && ![null, undefined].includes(total)
+    ? offset + 20 <= total
+    : false, [offset, total])
 
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('xs'))
   const [details, setDetails] = useState(null)
-  const [element, setElement] = useState(null)
-  const observer = useRef(
-    new window.IntersectionObserver(
-      entries => {
-        const first = entries[0]
-        if (first.isIntersecting) {
-          dispatch(getTopTracksArtists({
-            key: GET_TOP_TRACKS_KEY,
-            type: TopSearch.Tracks,
-            more: true,
-            ..._filters.current
-          }))
-        }
-      },
-      { threshold: 1 }
-    )
-  )
-
-  useEffect(() => {
-    _filters.current = filters
-  }, [filters])
 
   useEffect(() => {
     const target = document.querySelector('#tracks-grid')
@@ -136,21 +117,6 @@ const Tracks = props => {
     getData()
   }, [getData])
 
-  useEffect(() => {
-    const currentElement = element
-    const currentObserver = observer.current
-
-    if (currentElement) {
-      currentObserver.observe(currentElement)
-    }
-
-    return () => {
-      if (currentElement) {
-        currentObserver.unobserve(currentElement)
-      }
-    }
-  }, [element])
-
   const listProps = useMemo(() => items && items.length
     ? items.map(track => ({
       id: track.id,
@@ -173,13 +139,27 @@ const Tracks = props => {
     }))
     : [], [items, isSmallScreen, setPlayingStatus])
 
+  const loadMore = useCallback(() => {
+    dispatch(getTopTracksArtists({
+      key: GET_TOP_TRACKS_KEY,
+      type: TopSearch.Tracks,
+      more: true,
+      ...filters
+    }))
+  }, [dispatch, filters])
+
   return (
     <>
       <LoadingMask isLoading={isFetching}>
-        <AnimatedListWrapper>
-          {listProps.map(p => <Item {...p} isSmallScreen={isSmallScreen} />)}
-        </AnimatedListWrapper>
-        {!isFetching && hasMore && <div ref={setElement} style={{ background: 'transparent' }} />}
+        <InfiniteScrollLoader
+          _key={GET_TOP_TRACKS_KEY}
+          loadMore={loadMore}
+          stopObserving={!hasMore}
+        >
+          <AnimatedListWrapper>
+            {listProps.map(p => <Item {...p} isSmallScreen={isSmallScreen} />)}
+          </AnimatedListWrapper>
+        </InfiniteScrollLoader>
       </LoadingMask>
       <CustomDialog
         title={get(details, 'name', '')}

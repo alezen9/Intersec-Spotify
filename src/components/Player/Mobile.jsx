@@ -109,6 +109,7 @@ const MobilePlayer = props => {
     if (open) {
       setY(25)
       _y.set(0)
+      document.body.style.transform = 'translateZ()'
     }
   }, [open, _y])
 

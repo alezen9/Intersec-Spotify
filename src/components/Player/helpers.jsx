@@ -27,10 +27,21 @@ const useStyles = makeStyles(theme => ({
   },
   rail: {
     height: 3,
-    backgroundColor: typographyColor
+    backgroundColor: typographyColor,
+    opacity: 1
   },
   track: {
-    height: 3
+    height: 3,
+    backgroundColor: '#222',
+    [theme.breakpoints.down('xs')]: {
+      backgroundColor: 'dimgrey'
+    }
+  },
+  thumb: {
+    backgroundColor: '#222',
+    [theme.breakpoints.down('xs')]: {
+      backgroundColor: 'dimgrey'
+    }
   },
   buttons: {
     position: 'relative',
@@ -117,7 +128,8 @@ export const ProgressTrack = React.memo(props => {
           classes={{
             root: classes.progress,
             rail: classes.rail,
-            track: classes.track
+            track: classes.track,
+            thumb: classes.thumb
           }}
           min={0}
           step={1 / duration}
@@ -209,7 +221,7 @@ export const Lyrics = React.memo(props => {
     ? <div className={classes.lyrics}>
       {get(requestLyrics, 'status', null) === 'REQUEST_FAILURE'
         ? <Typography style={{ whiteSpace: 'pre-wrap', opacity: 0.8 }} variant='body1'>
-              OOps, couldn't find any lyrics! :/
+              Oops, couldn't find any lyrics! :/
         </Typography>
         : lyrics
           ? lyrics.text.trim()
